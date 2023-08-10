@@ -1,0 +1,51 @@
+generator client{
+    provider = "prisma-client-js"
+}
+
+datasource db{
+    provider = "mysql"
+    url = env("DATABASE_URL")
+}
+
+model Projects{
+    id Int @id @default(autoincrement())
+    projectName String
+    projectDuration Json
+    division Json
+    district Json
+    upazila Json
+    ngoApprovalDate String?
+    projectBudget String
+    reportingPeriod Json?
+    status String
+    attachmentName String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    DonorInformation DonorInformation[]
+    SubGrantPartners SubGrantPartners[]
+}
+model DonorInformation{
+    id Int @id @default(autoincrement())
+    name String?
+    donorType String?
+    address String?
+    phone String?
+    email String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    projects Projects @relation(fields: [projectID], references: [id])
+    projectID Int
+}
+
+model SubGrantPartners{
+    id Int @id @default(autoincrement())
+    name String?
+    address String?
+    contactName String?
+    phone String?
+    email String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    projects Projects @relation(fields: [projectID],references: [id])
+    projectID Int
+}

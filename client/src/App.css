@@ -1,0 +1,31 @@
+.main-content {
+  margin: "0 16px";
+
+  margin-top: 50px;
+  transition: margin 0.2s ease;
+}
+.toggle-button {
+  font-size: "16px";
+  width: 64;
+  height: 64;
+  color: white;
+  transition: margin 0.2s ease;
+}
+.footer {
+  transition: margin 0.2s ease;
+}
+.ant-layout-sider-children {
+  background-color: var(--sidebar-color);
+}
+.spinner-content {
+  padding: 50px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+}
