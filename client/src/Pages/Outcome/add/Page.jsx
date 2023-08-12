@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Layout,
   Space,
@@ -10,19 +11,8 @@ import {
   Select,
 } from "antd";
 import { useState } from "react";
-
 const { Content, Header } = Layout;
 const Page = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
   return (
     <>
       <Space

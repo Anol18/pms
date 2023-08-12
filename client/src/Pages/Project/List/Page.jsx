@@ -140,12 +140,14 @@ const Page = () => {
                 </Card>
               </Col>
             </Row>
-            <Row>
+            {/* Filter */}
+            {/* <Row>
               <Col lg={{ span: 24 }}>Filter</Col>
-            </Row>
+            </Row> */}
+            {/* Table */}
             <Row>
               <Col lg={{ span: 24 }}>
-                <Table columns={column} />
+                <Table columns={column} size="small" />
               </Col>
             </Row>
           </Content>

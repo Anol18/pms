@@ -1,4 +1,5 @@
 import {
+  Button,
   Col,
   Form,
   Input,
@@ -7,10 +8,19 @@ import {
   Row,
   Select,
   Space,
+  Table,
+  Modal,
 } from "antd";
+import { useState } from "react";
+
+import { useProjectListQuery } from "../../../api/apiSlices/projectApi/projectSlice";
 const { Content, Header } = Layout;
+
 const Page = () => {
   const [form] = Form.useForm();
+
+  const { data, isLoading, error } = useProjectListQuery();
+
   return (
     <>
       <Space
@@ -38,25 +48,47 @@ const Page = () => {
               <Row>
                 <Col lg={{ span: 24 }} xs={24}>
                   <Form.Item
-                    label="Program"
-                    name="program"
+                    label="Project"
+                    name="project"
                     required
                     rules={[
                       {
                         required: true,
-                        message: "Program Name is Required",
+                        message: "Project Name is Required",
                       },
                     ]}
                     tooltip="This is a required field"
                   >
-                    <Select placeholder="Select Project">
+                    <Select placeholder="Select Project" showSearch allowClear>
+                      <Select.Option></Select.Option>
+                      <Select.Option></Select.Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={{ span: 24 }} xs={24}>
+                  <Form.Item
+                    label="Outcome"
+                    name="outcome"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "Outcome Name is Required",
+                      },
+                    ]}
+                    tooltip="This is a required field"
+                  >
+                    <Select placeholder="Select Project" showSearch allowClear>
+                      <Select.Option></Select.Option>
                       <Select.Option></Select.Option>
                     </Select>
                   </Form.Item>
                 </Col>
               </Row>
               <Row gutter={16}>
-                <Col lg={{ span: 12 }} xs={24}>
+                <Col lg={{ span: 24 }} xs={24}>
                   <Form.Item
                     label="Activity Name"
                     name="activityName"
@@ -70,26 +102,6 @@ const Page = () => {
                     tooltip="This is a required field"
                   >
                     <Input placeholder="Program Name" />
-                  </Form.Item>
-                </Col>
-                <Col lg={{ span: 12 }} xs={24}>
-                  <Form.Item
-                    label="Unit Budget"
-                    name="unitBudget"
-                    required
-                    rules={[
-                      {
-                        required: true,
-                        message: "Unit Budget is Required",
-                      },
-                    ]}
-                    tooltip="This is a required field"
-                  >
-                    <InputNumber
-                      placeholder="Unit Budget"
-                      min={0}
-                      style={{ width: "100%" }}
-                    />
                   </Form.Item>
                 </Col>
               </Row>

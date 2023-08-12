@@ -16,6 +16,8 @@ import {
   SettingFilled,
   CalendarOutlined,
   SnippetsFilled,
+  FileDoneOutlined,
+  FileSearchOutlined,
 } from "@ant-design/icons";
 
 // Ant design item components
@@ -45,11 +47,19 @@ const items = [
   //   getItem("Add Program", "/addprogram"),
   //   getItem("Program List", "/association/association-list"),
   // ]),
-  getItem("Activities", "sub3", <AreaChartOutlined />, [
-    getItem("Programs", "/program"),
-    getItem("Add Activity", "/addactivity"),
-    getItem("Activity List", "/factory/factory-list"),
+  getItem("Outcome", "sub3", <FileDoneOutlined />, [
+    getItem("Add Outcome", "/addoutcome"),
+    getItem("Outcome List", "/outcomelist"),
   ]),
+  getItem("Activity", "sub11", <AreaChartOutlined />, [
+    getItem("Add Activity", "/addactivity"),
+    getItem("Activities List", "/activitylist"),
+  ]),
+  getItem("Detail Bidget", "sub12", <FileSearchOutlined />, [
+    getItem("Add Budget", "/addbudget"),
+    getItem("Budget List", "/budgetList"),
+  ]),
+
   getItem("PIP", "sub4", <SnippetsFilled />, [getItem("PIP List", "/pip")]),
   getItem("Employee", "sub5", <TeamOutlined />, [
     getItem("Add Employee", "/addemployee"),
@@ -58,6 +68,7 @@ const items = [
   getItem("Settings", "sub6", <SettingFilled />, [
     getItem("Designation", "/designation"),
     getItem("Office Branch", "/branch"),
+    getItem("Description Name", "/description"),
     // getItem("Employee List", "/union/union-list"),
   ]),
   getItem("Users", "sub7", <SettingFilled />, [
@@ -94,7 +105,7 @@ const Index = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [contentPosition, setContentPosition] = useState(200);
   const [buttonPosition, setButtontPosition] = useState(200);
-  const [width, setWidth] = useState(Number(window.innerWidth));
+  // const [width, setWidth] = useState(Number(window.innerWidth));
   const {
     token: { colorBgContainer },
   } = theme.useToken();

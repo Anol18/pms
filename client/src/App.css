@@ -29,3 +29,12 @@
   align-items: center;
   height: 80vh;
 }
+.total-budget-section {
+  border: 1px solid rgb(181, 181, 181);
+  padding: 5px 20px 5px 20px;
+  /* background-color: rgb(245, 207, 126); */
+}
+/* .ant-table-cell {
+  padding: 0;
+  margin: 0;
+} */
