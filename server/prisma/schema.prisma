@@ -9,7 +9,7 @@ datasource db{
 
 model Projects{
     id Int @id @default(autoincrement())
-    projectName String
+    projectName String 
     projectDuration Json
     division Json
     district Json
@@ -23,6 +23,8 @@ model Projects{
     updatedAt DateTime @updatedAt
     DonorInformation DonorInformation[]
     SubGrantPartners SubGrantPartners[]
+    Outcome Outcome[]
+
 }
 model DonorInformation{
     id Int @id @default(autoincrement())
@@ -48,4 +50,64 @@ model SubGrantPartners{
     updatedAt DateTime @updatedAt
     projects Projects @relation(fields: [projectID],references: [id])
     projectID Int
+}
+
+model Outcome{
+    id Int @id @default(autoincrement())
+    outcomeName String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    projects Projects @relation(fields: [projectID],references: [id])
+    Activity Activity[]
+    projectID Int
+}
+model Activity{
+    id Int @id @default(autoincrement())
+    activityName String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    outcome Outcome @relation(fields: [outcomeId],references: [id])
+    outcomeId Int
+    DetailBudget DetailBudget[]
+}
+model DetailBudget{
+        id Int @id @default(autoincrement())
+        particular String
+        costPerUnit Int
+        quantity Int
+        perUnitDescription String
+        unit Int
+        description String
+        createdAt DateTime @default(now())
+        updatedAt DateTime @updatedAt
+        activity Activity @relation(fields: [activityId],references: [id])
+        activityId Int
+}
+model Employee{
+    id Int @id @default(autoincrement())
+    fullName String
+    address String
+    phoneNumber String @unique
+    alternatePhoneNumber String @unique
+    email String @unique
+    nid String @unique
+    birthday String
+    maritalStatus String
+    spouseName String?
+    spouseEmployer String
+    designation String
+    employeeId String @unique
+    supervisor String
+    department String
+    workLocation String
+    workEmail String @unique
+    workPhone String @unique
+    cellPhone String @unique
+    startDate DateTime
+    salary String?
+    emergencyContactPersonsFullName String
+    emergencyContactPersonsAddress String
+    emergencyContactPersonsPrimaryPhone String
+    emergencyContactPersonsAlternatePhoene String
+    relationship String
 }

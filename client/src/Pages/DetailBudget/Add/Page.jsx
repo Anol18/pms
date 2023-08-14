@@ -24,7 +24,7 @@ const columnName = [
   {
     title: "Description",
     render: () => <Input style={{ borderRadius: 0 }} />,
-    width: "20%",
+    width: "15%",
     align: "center",
   },
   {
@@ -42,7 +42,7 @@ const columnName = [
   {
     title: "Per Unit Description",
     render: () => (
-      <Select style={{ width: "100%", borderRadius: 0 }}>
+      <Select style={{ width: "100%", borderRadius: 0 }} allowClear showSearch>
         <Select.Option></Select.Option>
       </Select>
     ),
@@ -58,11 +58,11 @@ const columnName = [
   {
     title: "Description",
     render: () => (
-      <Select style={{ width: "100%", borderRadius: 0 }}>
+      <Select style={{ width: "100%", borderRadius: 0 }} allowClear showSearch>
         <Select.Option></Select.Option>
       </Select>
     ),
-    width: "10%",
+    width: "8%",
     align: "center",
   },
   {
@@ -74,15 +74,52 @@ const columnName = [
   {
     title: "Description",
     render: () => (
-      <Select style={{ width: "100%", borderRadius: 0 }}>
+      <Select style={{ width: "100%", borderRadius: 0 }} allowClear showSearch>
         <Select.Option></Select.Option>
       </Select>
     ),
-    width: "10%",
+    width: "8%",
     align: "center",
   },
   {
-    title: "BDT Total",
+    title: "Gross Total",
+    render: () => (
+      <InputNumber
+        style={{ width: "100%", borderRadius: 0 }}
+        disabled
+        value="1000"
+      />
+    ),
+    with: "10%",
+    align: "center",
+  },
+
+  {
+    title: "TAX",
+    render: () => (
+      <InputNumber
+        style={{ width: "100%", borderRadius: 0 }}
+        disabled
+        value="1000"
+      />
+    ),
+    with: "10%",
+    align: "center",
+  },
+  {
+    title: "VAT",
+    render: () => (
+      <InputNumber
+        style={{ width: "100%", borderRadius: 0 }}
+        disabled
+        value="1000"
+      />
+    ),
+    with: "10%",
+    align: "center",
+  },
+  {
+    title: "Net Total",
     render: () => (
       <InputNumber
         style={{ width: "100%", borderRadius: 0 }}

@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 // const Profile = lazy(() => import("../Profile/Profile"));
 // Imporing logo image
 // import logo from "../../assets/logo.png";
+import Profile from "../Profile/Page";
+import Notification from "../NotificationBar/Page";
 import {
   ProjectOutlined,
   AreaChartOutlined,
@@ -21,7 +23,7 @@ import {
 } from "@ant-design/icons";
 
 // Ant design item components
-import { Layout, Menu, theme, Button } from "antd";
+import { Layout, Menu, theme, Button, Row, Col } from "antd";
 const { Header, Content, Footer, Sider } = Layout;
 
 // Sidebar object return Function
@@ -60,7 +62,7 @@ const items = [
     getItem("Budget List", "/budgetList"),
   ]),
 
-  getItem("PIP", "sub4", <SnippetsFilled />, [getItem("PIP List", "/pip")]),
+  getItem("PIP", "sub4", <SnippetsFilled />, [getItem("Generate PIP", "/pip")]),
   getItem("Employee", "sub5", <TeamOutlined />, [
     getItem("Add Employee", "/addemployee"),
     getItem("Employee List", "/union/union-list"),
@@ -121,7 +123,6 @@ const Index = ({ children }) => {
   }, [collapsed]);
   return (
     <>
-      {" "}
       <Layout
         style={{
           minHeight: "100vh",
@@ -166,6 +167,7 @@ const Index = ({ children }) => {
               PMS
             </h1>
           </div>
+
           {/* main menu */}
           <Menu
             theme="light"
@@ -201,8 +203,12 @@ const Index = ({ children }) => {
                 marginLeft: buttonPosition,
                 // display: width <= 767 && "none",
               }}
-            />{" "}
-            <Suspense fallback={<>Loading</>}>{/* <Profile /> */}</Suspense>
+            />
+
+            {/* profile */}
+            <Profile />
+            {/* Notification */}
+            <Notification />
           </Header>
           <Content
             className="main-content"

@@ -15,6 +15,7 @@ import Spinner from "./Components/Spinner/Page";
 const Program = lazy(() => import("./Pages/Activity/programs/list/Page"));
 const AddEmployee = lazy(() => import("./Pages/Employee/add/page"));
 const AddBudget = lazy(() => import("./Pages/DetailBudget/Add/Page"));
+const AddPip = lazy(() => import("./Pages/PIP/add/Page"));
 
 function App() {
   return (
@@ -77,6 +78,14 @@ function App() {
                     element={
                       <Suspense fallback={<Spinner />}>
                         <AddBudget />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/pip"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <AddPip />
                       </Suspense>
                     }
                   />
