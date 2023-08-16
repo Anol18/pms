@@ -27,6 +27,20 @@
 .notes-month section {
   font-size: 28px;
 }
+.header {
+  background: var(--light);
+  text-align: center;
+}
+.container {
+  margin: 20px;
+}
+.action-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.action-icon:hover {
+  color: rgb(155, 67, 19);
+}
 /* Works on Chrome and some other WebKit-based browsers */
 ::-webkit-scrollbar {
   width: 5px;

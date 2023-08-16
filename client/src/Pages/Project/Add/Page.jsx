@@ -49,7 +49,7 @@ data.push({
   hello: "hello",
 });
 const suffixSelector = (
-  <Form.Item noStyle>
+  <Form.Item noStyle name="currency">
     <Select
       style={{
         width: 70,
@@ -105,6 +105,10 @@ const Page = () => {
   const [requiredMark] = useState("optional");
   const [divisionId, setDivisionID] = useState();
   const [districtId, setDistrictID] = useState();
+  const [ngoApprovalDate, setNgoApprovalDate] = useState();
+  const [reportingPeriod, setReportingPeriod] = useState();
+  const [subGrant, setSubGrant] = useState([]);
+  const [projectDuration, setProjectDuration] = useState();
 
   const handleColumn = (props) => {
     if (props === "+") {
@@ -146,10 +150,38 @@ const Page = () => {
     getId.clear();
   };
   const onSubmit = (value) => {
-    // console.log(value);
-
-    addProject(value);
+    addProject({
+      value,
+      projectDuration,
+      ngoApprovalDate,
+      reportingPeriod,
+      subGrant,
+    });
   };
+  const handleNgoApprovalDate = (_, date) => {
+    setNgoApprovalDate(date);
+  };
+  const handleReportingPeriod = (_, date) => {
+    setReportingPeriod(date);
+  };
+  const handleSubGrantsPartner = (e, index) => {
+    clearTimeout(handleSubGrantsPartner.timeoutIds[index]);
+
+    handleSubGrantsPartner.timeoutIds[index] = setTimeout(() => {
+      setSubGrant((prevSubGrants) => {
+        const updatedSubGrants = [...prevSubGrants];
+        updatedSubGrants[index] = {
+          ...updatedSubGrants[index],
+          [e.target.name]: e.target.value,
+        };
+        return updatedSubGrants;
+      });
+    }, 200);
+  };
+
+  handleSubGrantsPartner.timeoutIds = [];
+  // console.log(subGrant);
+  console.log(projectDuration);
   return (
     <>
       <Space
@@ -196,7 +228,7 @@ const Page = () => {
                     required
                     tooltip="This is a required field"
                   >
-                    <Input placeholder="Project Name" />
+                    <Input placeholder="Project Name" autoComplete="off" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -204,7 +236,7 @@ const Page = () => {
               <Row gutter={16} justify="space-between">
                 <Col lg={{ span: 4 }}>
                   <Form.Item
-                    name="projectDuration"
+                    // name="projectDuration"
                     label="Project Duration"
                     tooltip={{
                       title: "Project Duration Is Required",
@@ -222,6 +254,7 @@ const Page = () => {
                       //   dayjs("01/01/2015", dateFormat),
                       //   dayjs("01/01/2015", dateFormat),
                       // ]}
+                      onChange={(_, date) => setProjectDuration(date)}
                       format={dateFormat}
                       style={{ width: "100%" }}
                     />
@@ -242,11 +275,9 @@ const Page = () => {
                     >
                       {division.map((item) => {
                         return (
-                          <>
-                            <Select.Option key={item.id} value={item.name}>
-                              {item.name}
-                            </Select.Option>
-                          </>
+                          <Select.Option key={item.id} value={item.name}>
+                            {item.name}
+                          </Select.Option>
                         );
                       })}
                     </Select>
@@ -296,32 +327,43 @@ const Page = () => {
                   </Form.Item>
                 </Col>
                 <Col lg={{ span: 4 }}>
-                  <Form.Item label="NGO Approval Date" name="ngoApprovalDate">
-                    <DatePicker style={{ width: "100%" }} />
+                  <Form.Item label="NGO Approval Date">
+                    <DatePicker
+                      style={{ width: "100%" }}
+                      onChange={handleNgoApprovalDate}
+                    />
                   </Form.Item>
                 </Col>
               </Row>
               <Row justify="space-between">
                 <Col lg={{ span: 4 }} xs={24}>
-                  <Form.Item label="Donor Information">
-                    <Input placeholder="Name" />
+                  <Form.Item label="Donor Information" name="donorName">
+                    <Input placeholder="Name" autoComplete="off" />
                   </Form.Item>
                 </Col>
                 <Col lg={{ span: 4 }} xs={24}>
-                  <Form.Item label>
+                  <Form.Item label name="donorType">
                     <Select placeholder="Donor Type">
-                      <Select.Option>Individual</Select.Option>
-                      <Select.Option>Organization</Select.Option>
+                      <Select.Option key="1" value="Individual">
+                        Individual
+                      </Select.Option>
+                      <Select.Option key="2" value="Organization">
+                        Organization
+                      </Select.Option>
                     </Select>
                   </Form.Item>
                 </Col>
                 <Col lg={{ span: 4 }} xs={24}>
-                  <Form.Item label>
-                    <TextArea placeholder="Address" rows={1} />
+                  <Form.Item label name="donorAddress">
+                    <TextArea
+                      placeholder="Address"
+                      rows={1}
+                      autoComplete="off"
+                    />
                   </Form.Item>
                 </Col>
                 <Col lg={{ span: 4 }} xs={24}>
-                  <Form.Item label>
+                  <Form.Item label name="donorPhoneNumber">
                     <Input
                       placeholder="Phone Number"
                       addonBefore={donorPhoneCode}
@@ -329,7 +371,7 @@ const Page = () => {
                   </Form.Item>
                 </Col>
                 <Col lg={{ span: 4 }} xs={24}>
-                  <Form.Item label>
+                  <Form.Item label name="donorEmail">
                     <Input placeholder="Email" />
                   </Form.Item>
                 </Col>
@@ -366,31 +408,49 @@ const Page = () => {
                         {subContact >= 1 && (
                           <Row justify="space-between">
                             <Col lg={{ span: 4 }} xs={24}>
-                              <Form.Item name="">
-                                <Input placeholder="Name" />
-                              </Form.Item>
-                            </Col>
-                            <Col lg={{ span: 4 }} xs={24}>
-                              <Form.Item>
-                                <Input placeholder="Address" />
-                              </Form.Item>
-                            </Col>
-                            <Col lg={{ span: 4 }} xs={24}>
-                              <Form.Item>
-                                <Input placeholder="Contact Name" />
-                              </Form.Item>
-                            </Col>
-                            <Col lg={{ span: 4 }} xs={24}>
                               <Form.Item>
                                 <Input
-                                  placeholder="Phone Number"
-                                  addonBefore={subGrantPhoneCode}
+                                  placeholder="Name"
+                                  name="subGrantName"
+                                  onChange={(e) => handleSubGrantsPartner(e, 0)}
                                 />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }} xs={24}>
                               <Form.Item>
-                                <Input placeholder="Enail" />
+                                <Input
+                                  placeholder="Address"
+                                  name="subgrantAddress"
+                                  onChange={(e) => handleSubGrantsPartner(e, 0)}
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col lg={{ span: 4 }} xs={24}>
+                              <Form.Item>
+                                <Input
+                                  placeholder="Contact Name"
+                                  name="subGrantContactName"
+                                  onChange={(e) => handleSubGrantsPartner(e, 0)}
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col lg={{ span: 4 }} xs={24}>
+                              <Form.Item>
+                                <Input
+                                  name="subGrantPhoneNumber"
+                                  placeholder="Phone Number"
+                                  onChange={(e) => handleSubGrantsPartner(e, 0)}
+                                  addonBefore={donorPhoneCode}
+                                />
+                              </Form.Item>
+                            </Col>
+                            <Col lg={{ span: 4 }} xs={24}>
+                              <Form.Item>
+                                <Input
+                                  placeholder="Email"
+                                  name="subGrantEmail"
+                                  onChange={(e) => handleSubGrantsPartner(e, 0)}
+                                />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -399,30 +459,48 @@ const Page = () => {
                           <Row justify="space-between">
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Name" />
+                                <Input
+                                  placeholder="Name"
+                                  name="subGrantName"
+                                  onChange={(e) => handleSubGrantsPartner(e, 1)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Address" />
+                                <Input
+                                  name="subgrantAddress"
+                                  placeholder="Address"
+                                  onChange={(e) => handleSubGrantsPartner(e, 1)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Contact Name" />
+                                <Input
+                                  name="subGrantContactName"
+                                  placeholder="Contact Name"
+                                  onChange={(e) => handleSubGrantsPartner(e, 1)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
                                 <Input
                                   placeholder="Phone Number"
+                                  name="subGrantPhoneNumber"
                                   addonBefore={subGrantPhoneCode}
+                                  onChange={(e) => handleSubGrantsPartner(e, 1)}
                                 />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Enail" />
+                                <Input
+                                  placeholder="Email"
+                                  name="subGrantEmail"
+                                  onChange={(e) => handleSubGrantsPartner(e, 1)}
+                                />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -431,30 +509,48 @@ const Page = () => {
                           <Row justify="space-between">
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Name" />
+                                <Input
+                                  placeholder="Name"
+                                  name="subGrantName"
+                                  onChange={(e) => handleSubGrantsPartner(e, 2)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Address" />
+                                <Input
+                                  name="subgrantAddress"
+                                  placeholder="Address"
+                                  onChange={(e) => handleSubGrantsPartner(e, 2)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Contact Name" />
+                                <Input
+                                  name="subGrantContactName"
+                                  placeholder="Contact Name"
+                                  onChange={(e) => handleSubGrantsPartner(e, 2)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
                                 <Input
                                   placeholder="Phone Number"
+                                  name="subGrantPhoneNumber"
                                   addonBefore={subGrantPhoneCode}
+                                  onChange={(e) => handleSubGrantsPartner(e, 2)}
                                 />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Enail" />
+                                <Input
+                                  placeholder="Email"
+                                  name="subGrantEmail"
+                                  onChange={(e) => handleSubGrantsPartner(e, 2)}
+                                />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -463,30 +559,48 @@ const Page = () => {
                           <Row justify="space-between">
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Name" />
+                                <Input
+                                  placeholder="Name"
+                                  name="subGrantName"
+                                  onChange={(e) => handleSubGrantsPartner(e, 3)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Address" />
+                                <Input
+                                  name="subgrantAddress"
+                                  placeholder="Address"
+                                  onChange={(e) => handleSubGrantsPartner(e, 3)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Contact Name" />
+                                <Input
+                                  name="subGrantContactName"
+                                  placeholder="Contact Name"
+                                  onChange={(e) => handleSubGrantsPartner(e, 3)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
                                 <Input
                                   placeholder="Phone Number"
+                                  name="subGrantPhoneNumber"
                                   addonBefore={subGrantPhoneCode}
+                                  onChange={(e) => handleSubGrantsPartner(e, 3)}
                                 />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Enail" />
+                                <Input
+                                  placeholder="Email"
+                                  name="subGrantEmail"
+                                  onChange={(e) => handleSubGrantsPartner(e, 3)}
+                                />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -496,30 +610,49 @@ const Page = () => {
                           <Row justify="space-between">
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Name" />
+                                <Input
+                                  placeholder="Name"
+                                  name="subGrantName"
+                                  onChange={(e) => handleSubGrantsPartner(e, 4)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Address" />
+                                <Input
+                                  name="subgrantAddress"
+                                  placeholder="Address"
+                                  onChange={(e) => handleSubGrantsPartner(e, 4)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Contact Name" />
+                                <Input
+                                  name="subGrantContactName"
+                                  placeholder="Contact Name"
+                                  onChange={(e) => handleSubGrantsPartner(e, 4)}
+                                />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
                                 <Input
                                   placeholder="Phone Number"
+                                  name="subGrantPhoneNumber"
                                   addonBefore={subGrantPhoneCode}
+                                  onChange={(e) => handleSubGrantsPartner(e, 4)}
                                 />
                               </Form.Item>
                             </Col>
                             <Col lg={{ span: 4 }}>
                               <Form.Item>
-                                <Input placeholder="Email" />
+                                <Input
+                                  placeholder="Email"
+                                  autoComplete="off"
+                                  name="subGrantEmail"
+                                  onChange={(e) => handleSubGrantsPartner(e, 4)}
+                                />
                               </Form.Item>
                             </Col>
                           </Row>
@@ -552,8 +685,8 @@ const Page = () => {
                   </Form.Item>
                 </Col>
                 <Col>
-                  <Form.Item label="Reporting Period" name="reportingPeriod">
-                    <RangePicker />
+                  <Form.Item label="Reporting Period">
+                    <RangePicker onChange={handleReportingPeriod} />
                     {/* <Button size="small" onClick={() => handleColumn("-")}>
                       <MinusOutlined />
                     </Button>

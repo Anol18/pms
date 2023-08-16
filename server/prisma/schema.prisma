@@ -9,13 +9,13 @@ datasource db{
 
 model Projects{
     id Int @id @default(autoincrement())
-    projectName String 
+    projectName String @db.VarChar(500)
     projectDuration Json
     division Json
     district Json
     upazila Json
     ngoApprovalDate String?
-    projectBudget String
+    projectBudget Int
     reportingPeriod Json?
     status String
     attachmentName String?
@@ -41,11 +41,11 @@ model DonorInformation{
 
 model SubGrantPartners{
     id Int @id @default(autoincrement())
-    name String?
-    address String?
-    contactName String?
-    phone String?
-    email String?
+    subGrantName String?
+    subgrantAddress String?
+    subGrantContactName String?
+    subGrantPhoneNumber String?
+    subGrantEmail String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     projects Projects @relation(fields: [projectID],references: [id])

@@ -70,7 +70,7 @@ const items = [
   getItem("Settings", "sub6", <SettingFilled />, [
     getItem("Designation", "/designation"),
     getItem("Office Branch", "/branch"),
-    getItem("Description Name", "/description"),
+    getItem("Budget Description", "/description"),
     // getItem("Employee List", "/union/union-list"),
   ]),
   getItem("Users", "sub7", <SettingFilled />, [

@@ -10,6 +10,7 @@ const ProjectList = lazy(() => import("./Pages/Project/List/Page"));
 const Sidebar = lazy(() => import("./Components/Sidebar/Index"));
 // const AddProgram = lazy(() => import("./Pages/Program/add/Page"));
 const AddOutcome = lazy(() => import("./Pages/Outcome/add/Page"));
+const OutcomeList = lazy(() => import("./Pages/Outcome/list/Page"));
 const AddActivity = lazy(() => import("./Pages/Activity/Add/Page"));
 import Spinner from "./Components/Spinner/Page";
 const Program = lazy(() => import("./Pages/Activity/programs/list/Page"));
@@ -54,6 +55,14 @@ function App() {
                     element={
                       <Suspense fallback={<Spinner />}>
                         <AddOutcome />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/outcomelist"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <OutcomeList />
                       </Suspense>
                     }
                   />
