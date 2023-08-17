@@ -17,6 +17,7 @@ const Program = lazy(() => import("./Pages/Activity/programs/list/Page"));
 const AddEmployee = lazy(() => import("./Pages/Employee/add/page"));
 const AddBudget = lazy(() => import("./Pages/DetailBudget/Add/Page"));
 const AddPip = lazy(() => import("./Pages/PIP/add/Page"));
+const Dashboard = lazy(() => import("./Pages/Dashboard/Page"));
 
 function App() {
   return (
@@ -33,6 +34,14 @@ function App() {
             <Suspense fallback={<Spinner />}>
               <Sidebar>
                 <Routes>
+                  <Route
+                    path="/"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <Dashboard />
+                      </Suspense>
+                    }
+                  />
                   <Route
                     path="/addproject"
                     element={

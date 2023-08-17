@@ -39,7 +39,7 @@ function getItem(label, key, icon, children, path) {
 
 // Sidebar Nav menu items
 const items = [
-  getItem("Dashboard", "/", <AppstoreAddOutlined />, null, "/workerslist"),
+  getItem("Dashboard", "/", <AppstoreAddOutlined />, null, "/"),
   //   getItem("Option 2", "2", <DesktopOutlined />),
   getItem("Projects", "sub1", <ProjectOutlined />, [
     getItem("Add Project", "/addproject"),

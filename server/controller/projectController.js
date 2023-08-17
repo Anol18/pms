@@ -66,6 +66,11 @@ module.exports = {
     try {
       const response = await prisma.Projects.findMany({
         // take: 5,
+        orderBy: [
+          {
+            id: "desc",
+          },
+        ],
         include: {
           DonorInformation: true,
         },

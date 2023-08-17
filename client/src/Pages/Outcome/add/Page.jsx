@@ -11,8 +11,21 @@ import {
   Select,
 } from "antd";
 import { useState } from "react";
+import { useProjectListQuery } from "../../../api/apiSlices/projectApi/projectSlice";
+import { useAddOutcomeMutation } from "../../../api/apiSlices/outcome.slice";
+import { useNavigate } from "react-router-dom";
 const { Content, Header } = Layout;
 const Page = () => {
+  const { data, isSuccess } = useProjectListQuery();
+  const [addOutcome, response] = useAddOutcomeMutation();
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+    const res = await addOutcome(data);
+    if (res) {
+      navigate("/outcomelist");
+    }
+  };
   return (
     <>
       <Space
@@ -29,13 +42,14 @@ const Page = () => {
               initialValues={{
                 status: "In Progress",
               }}
+              onFinish={onSubmit}
             >
               <Row>
                 <Col lg={{ span: 24 }} xs={24}>
                   <Form.Item
                     label="Project"
                     required
-                    name="projectName"
+                    name="projectID"
                     rules={[
                       { required: true, message: "Please select project" },
                     ]}
@@ -45,7 +59,14 @@ const Page = () => {
                       showSearch
                       allowClear
                     >
-                      <Select.Option>asdas</Select.Option>
+                      {isSuccess &&
+                        data.map((item) => {
+                          return (
+                            <Select.Option key={item.id} value={item.id}>
+                              {item.projectName}
+                            </Select.Option>
+                          );
+                        })}
                     </Select>
                   </Form.Item>
                 </Col>
@@ -54,7 +75,7 @@ const Page = () => {
                 <Col lg={{ span: 24 }} xs={24}>
                   <Form.Item
                     label="Outcome Name"
-                    name="Outcome"
+                    name="outcomeName"
                     required
                     rules={[
                       {
@@ -67,34 +88,7 @@ const Page = () => {
                   </Form.Item>
                 </Col>
               </Row>
-              <Row>
-                <Col lg={{ span: 24 }} xs={24}>
-                  {" "}
-                  <Form.Item
-                    label="Status"
-                    name="status"
-                    required
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select status",
-                      },
-                    ]}
-                  >
-                    <Select allowClear placeholder="Please Select Status">
-                      <Select.Option value="Not Started">
-                        Not Started
-                      </Select.Option>
-                      <Select.Option value="In Progress">
-                        In Progress
-                      </Select.Option>
-                      <Select.Option value="On Hold">On Hold</Select.Option>
-                      <Select.Option value="Cancelled">Cancelled</Select.Option>
-                      <Select.Option value="Finished">Finished</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </Row>
+
               <Row justify="end" gutter={16}>
                 <Col>
                   <Button htmlType="reset">Reset</Button>

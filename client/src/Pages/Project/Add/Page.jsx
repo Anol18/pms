@@ -32,6 +32,7 @@ import {
 import { useState } from "react";
 import dayjs from "dayjs";
 import { useAddProjectMutation } from "../../../api/apiSlices/projectApi/projectSlice";
+import { useNavigate } from "react-router-dom";
 
 const dateFormat = "DD/MM/YYYY";
 const { RangePicker } = DatePicker;
@@ -63,7 +64,7 @@ const suffixSelector = (
   </Form.Item>
 );
 const donorPhoneCode = (
-  <Form.Item noStyle>
+  <Form.Item noStyle name="dononePhoneCode">
     <Select
       style={{
         width: 70,
@@ -109,6 +110,7 @@ const Page = () => {
   const [reportingPeriod, setReportingPeriod] = useState();
   const [subGrant, setSubGrant] = useState([]);
   const [projectDuration, setProjectDuration] = useState();
+  const navigate = useNavigate();
 
   const handleColumn = (props) => {
     if (props === "+") {
@@ -149,14 +151,15 @@ const Page = () => {
     setDistrictID(data);
     getId.clear();
   };
-  const onSubmit = (value) => {
-    addProject({
+  const onSubmit = async (value) => {
+    const res = await addProject({
       value,
       projectDuration,
       ngoApprovalDate,
       reportingPeriod,
       subGrant,
     });
+    if (res) navigate("/projectlist");
   };
   const handleNgoApprovalDate = (_, date) => {
     setNgoApprovalDate(date);
@@ -180,8 +183,7 @@ const Page = () => {
   };
 
   handleSubGrantsPartner.timeoutIds = [];
-  // console.log(subGrant);
-  console.log(projectDuration);
+
   return (
     <>
       <Space
@@ -208,8 +210,8 @@ const Page = () => {
               onFinish={onSubmit}
               initialValues={{
                 requiredMarkValue: requiredMark,
-                suffix: "BDT",
-                donorPhoneCode: "+1",
+                currency: "BDT",
+                dononePhoneCode: "+1",
                 status: "In Progress",
                 subGrantPhoneCode: "+1",
               }}
@@ -242,6 +244,7 @@ const Page = () => {
                       title: "Project Duration Is Required",
                       icon: <InfoCircleOutlined />,
                     }}
+                    required
                     rules={[
                       {
                         required: true,
@@ -261,7 +264,17 @@ const Page = () => {
                   </Form.Item>
                 </Col>
                 <Col lg={{ span: 4 }} xs={24}>
-                  <Form.Item label="Division" name="division">
+                  <Form.Item
+                    label="Division"
+                    name="division"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "Division is required",
+                      },
+                    ]}
+                  >
                     <Select
                       mode="multiple"
                       placeholder="Please select"
@@ -284,7 +297,17 @@ const Page = () => {
                   </Form.Item>
                 </Col>
                 <Col lg={{ span: 4 }}>
-                  <Form.Item label="District" name="district">
+                  <Form.Item
+                    label="District"
+                    name="district"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "District is required",
+                      },
+                    ]}
+                  >
                     <Select
                       mode="multiple"
                       placeholder="Please select"
@@ -306,7 +329,17 @@ const Page = () => {
                   </Form.Item>
                 </Col>
                 <Col lg={{ span: 4 }}>
-                  <Form.Item label="Upazila" name="upazila">
+                  <Form.Item
+                    label="Upazila"
+                    name="upazila"
+                    required
+                    rules={[
+                      {
+                        required: true,
+                        message: "Upazila is required",
+                      },
+                    ]}
+                  >
                     <Select
                       mode="multiple"
                       placeholder="Please select"
@@ -371,7 +404,16 @@ const Page = () => {
                   </Form.Item>
                 </Col>
                 <Col lg={{ span: 4 }} xs={24}>
-                  <Form.Item label name="donorEmail">
+                  <Form.Item
+                    label
+                    name="donorEmail"
+                    rules={[
+                      {
+                        type: "email",
+                        message: "Enter a valid amail",
+                      },
+                    ]}
+                  >
                     <Input placeholder="Email" />
                   </Form.Item>
                 </Col>
@@ -684,7 +726,23 @@ const Page = () => {
                     />
                   </Form.Item>
                 </Col>
-                <Col>
+                <Col lg={{ span: 4 }}>
+                  <Form.Item
+                    required
+                    label="Conversion Rate"
+                    name="rate"
+                    tooltip="USD, GBP, EUR = BDT, If budget is in BDT then Conversion rate will be 1 "
+                    rules={[
+                      { required: true, message: "Please set conversion rate" },
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: "100%" }}
+                      placeholder="Conversion rate"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col lg={{ span: 4 }}>
                   <Form.Item label="Reporting Period">
                     <RangePicker onChange={handleReportingPeriod} />
                     {/* <Button size="small" onClick={() => handleColumn("-")}>
@@ -720,19 +778,8 @@ const Page = () => {
                     </Select>
                   </Form.Item>
                 </Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
-                <Col></Col>
+
+                <Col lg={{ span: 4 }}></Col>
               </Row>
 
               <Row>

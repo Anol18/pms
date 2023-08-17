@@ -105,11 +105,11 @@ const column = [
     ),
   },
 ];
-const getRandomuserParams = (params) => ({
-  results: params.pagination?.pageSize,
-  page: params.pagination?.current,
-  ...params,
-});
+// const getRandomuserParams = (params) => ({
+//   results: params.pagination?.pageSize,
+//   page: params.pagination?.current,
+//   ...params,
+// });
 const Page = () => {
   // RTk Query
   const { data, error, isLoading, isSuccess } = useProjectListQuery();
@@ -202,22 +202,28 @@ const Page = () => {
       ),
     },
   ];
-  const [tData, setTData] = useState();
+  const [tData, setTData] = useState(null);
   const tableData = [];
-  console.log(data);
-  isSuccess &&
-    data.map((item, index) => {
-      tableData.push({
-        sl: index + 1,
-        projectName: item.projectName,
-        projectDuration: item.projectDuration.toString().replace(/,/g, " to "),
-        upazila: item.upazila.toString(),
-        district: item.district.toString(),
-        Division: item.division.toString(),
-        ngoApprovalDate: item.ngoApprovalDate,
-        // donorName: item.DonorInformation[0],
+
+  const initialDataLoad = () => {
+    data &&
+      data.map((item, index) => {
+        tableData.push({
+          key: index,
+          sl: index + 1,
+          projectName: item.projectName,
+          projectDuration: item.projectDuration
+            .toString()
+            .replace(/,/g, " to "),
+          upazila: item.upazila.toString(),
+          district: item.district.toString(),
+          Division: item.division.toString(),
+          ngoApprovalDate: item.ngoApprovalDate,
+          donorName: item.DonorInformation[0]?.name,
+        });
       });
-    });
+    setTData(tableData);
+  };
   const handleTableChange = (pagination, filters, sorter) => {
     setTableParams({
       pagination,
@@ -231,20 +237,21 @@ const Page = () => {
     }
   };
   useEffect(() => {
-    setTData(tableData);
-    setTableParams({
-      ...tableParams,
-      pagination: {
-        ...tableParams.pagination,
-        position: ["bottomCenter"],
+    // setTData(tableData);
+    // setTableParams({
+    //   ...tableParams,
+    //   pagination: {
+    //     ...tableParams.pagination,
+    //     position: ["bottomCenter"],
 
-        total: 200,
-        // 200 is mock data, you should read it from server
-        // total: data.totalCount,
-      },
-    });
-  }, [isSuccess]);
-
+    //     total: 50,
+    //     // 200 is mock data, you should read it from server
+    //     // total: data.totalCount,
+    //   },
+    // });
+    initialDataLoad();
+  }, [isSuccess, isLoading]);
+  console.log("loada", isLoading);
   if (isLoading) return <Spinner />;
   return (
     <>
@@ -266,7 +273,7 @@ const Page = () => {
                 <Card bordered={false}>
                   <Statistic
                     title="Total Projects"
-                    value={10}
+                    value={tableData && tableData.length}
                     valueStyle={{
                       color: "#3f8600",
                     }}
@@ -348,20 +355,18 @@ const Page = () => {
 
             <Row style={{ marginTop: "20px" }}>
               <Col lg={{ span: 24 }}>
-                {isSuccess && (
-                  <Table
-                    bordered
-                    columns={column}
-                    size="small"
-                    dataSource={tData}
-                    pagination={tableParams.pagination}
-                    loading={isLoading}
-                    onChange={handleTableChange}
-                    scroll={{
-                      y: 400,
-                    }}
-                  />
-                )}
+                <Table
+                  bordered
+                  columns={column}
+                  size="small"
+                  dataSource={tData}
+                  // pagination={tableParams.pagination}
+                  loading={isLoading}
+                  onChange={handleTableChange}
+                  scroll={{
+                    y: 400,
+                  }}
+                />
               </Col>
             </Row>
           </Content>
