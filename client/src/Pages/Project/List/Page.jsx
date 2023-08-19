@@ -114,6 +114,7 @@ const Page = () => {
   // RTk Query
   const { data, error, isLoading, isSuccess } = useProjectListQuery();
   const dispatch = useDispatch();
+  const [totalBudget, setTotalBudget] = useState();
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -125,19 +126,26 @@ const Page = () => {
       title: "#SL",
       dataIndex: "sl",
       align: "center",
+      width: 70,
+      // fixed: "left",
     },
     {
       title: "Project Name",
       dataIndex: "projectName",
+      width: 300,
+      align: "justify",
+      // fixed: "left",
     },
     {
       title: "Project Duration",
       dataIndex: "projectDuration",
+      width: 100,
+      align: "center",
     },
     {
       title: "Location",
       // dataIndex: "location",
-      width: "10%",
+      width: 150,
       render: (text, record) => (
         // <span style={{ color: "green" }}>{record.upazila}</span>
         <>
@@ -154,28 +162,51 @@ const Page = () => {
     {
       title: "NGO Approval Date",
       dataIndex: "ngoApprovalDate",
+      width: 100,
     },
     {
       title: "Donor Name",
       dataIndex: "donorName",
+      width: 200,
     },
     {
-      title: "Project Budget",
+      title: "Project Budget(BDT)",
+      dataIndex: "projectBudget",
+      width: 120,
+      align: "center",
+      // filters
+    },
+    {
+      title: "Conversion rate(BDT)",
+      dataIndex: "conversionRate",
+      width: 120,
+      align: "center",
+    },
+    {
+      title: "Submitted Budget",
+      dataIndex: "budgetInCurrency",
+      width: 120,
+      align: "center",
     },
     {
       title: "Total Expenses",
+      width: 120,
     },
     {
       title: "Total Activities",
+      width: 120,
     },
     {
       title: "Activity Completed",
+      width: 90,
     },
     {
       title: "Remaining Activites",
+      width: 90,
     },
     {
       title: "Reporting Date",
+      width: 120,
     },
     {
       title: "Status",
@@ -203,8 +234,8 @@ const Page = () => {
     },
   ];
   const [tData, setTData] = useState(null);
-  const tableData = [];
-
+  let tableData = [];
+  let sum = 0.0;
   const initialDataLoad = () => {
     data &&
       data.map((item, index) => {
@@ -220,9 +251,16 @@ const Page = () => {
           Division: item.division.toString(),
           ngoApprovalDate: item.ngoApprovalDate,
           donorName: item.DonorInformation[0]?.name,
+          projectBudget: item.projectBudget,
+          budgetInCurrency: item.budgetInCurrency,
+          conversionRate: item.conversionRate,
         });
+        sum = sum + parseFloat(item.projectBudget);
       });
     setTData(tableData);
+    tableData = [];
+    setTotalBudget(sum);
+    sum = 0.0;
   };
   const handleTableChange = (pagination, filters, sorter) => {
     setTableParams({
@@ -251,7 +289,7 @@ const Page = () => {
     // });
     initialDataLoad();
   }, [isSuccess, isLoading]);
-  console.log("loada", isLoading);
+
   if (isLoading) return <Spinner />;
   return (
     <>
@@ -273,7 +311,7 @@ const Page = () => {
                 <Card bordered={false}>
                   <Statistic
                     title="Total Projects"
-                    value={tableData && tableData.length}
+                    value={tData && tData.length}
                     valueStyle={{
                       color: "#3f8600",
                     }}
@@ -286,13 +324,13 @@ const Page = () => {
                 <Card bordered={false}>
                   <Statistic
                     title="Total Budget"
-                    value={9.3}
+                    value={totalBudget}
                     precision={2}
                     valueStyle={{
                       color: "#3f8600",
                     }}
                     prefix={<ArrowUpOutlined />}
-                    suffix="$"
+                    // suffix="BDT"
                   />
                 </Card>
               </Col>
@@ -363,8 +401,10 @@ const Page = () => {
                   // pagination={tableParams.pagination}
                   loading={isLoading}
                   onChange={handleTableChange}
+                  // style={{ height: "700px" }}
                   scroll={{
                     y: 400,
+                    x: 1000,
                   }}
                 />
               </Col>

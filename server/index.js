@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 const helmet = require("helmet");
 const projectRoute = require("./routes/projectsRoute");
 const outcomeRoute = require("./routes/outcome.route");
+const path = require("path");
 const app = express();
 app.use(cors());
 app.use(helmet());
@@ -15,6 +16,9 @@ app.use(express.json());
 // now.setMinutes(now.getMinutes() + timeZoneOffset);
 
 // Routes
+// app.get("*", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "..", "client", "index.html"));
+// });
 app.use("/api", projectRoute);
 app.use("/api", outcomeRoute);
 

@@ -4,24 +4,31 @@ import {
   Form,
   Input,
   Layout,
-  Radio,
   Col,
   Row,
   Space,
-  Divider,
   InputNumber,
-  Upload,
-  Table,
   Select,
+  message,
+  Upload,
 } from "antd";
-import { Footer, Header } from "antd/es/layout/layout";
-const { Content } = Layout;
+
+const { Header, Content } = Layout;
 const { TextArea } = Input;
-import countryList from "../../../lib/countryList.json";
-import division from "../../../lib/division.json";
-import district from "../../../lib/district.json";
-import upazila from "../../../lib/upazilas.json";
-import Spinner from "../../../Components/Spinner/Page";
+
+async function importJSONFile(filePath) {
+  try {
+    const module = await import(filePath);
+    return module.default;
+  } catch (error) {
+    console.error("Error importing JSON file:", error);
+    return null;
+  }
+}
+const countryList = await importJSONFile("../../../lib/countryList.json");
+const division = await importJSONFile("../../../lib/division.json");
+const district = await importJSONFile("../../../lib/district.json");
+const upazila = await importJSONFile("../../../lib/upazilas.json");
 
 import {
   InfoCircleOutlined,
@@ -30,7 +37,7 @@ import {
   UploadOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { useAddProjectMutation } from "../../../api/apiSlices/projectApi/projectSlice";
 import { useNavigate } from "react-router-dom";
 
@@ -45,10 +52,7 @@ const { RangePicker } = DatePicker;
 //     ),
 //   },
 // ];
-const data = [];
-data.push({
-  hello: "hello",
-});
+
 const suffixSelector = (
   <Form.Item noStyle name="currency">
     <Select
@@ -81,24 +85,7 @@ const donorPhoneCode = (
     </Select>
   </Form.Item>
 );
-const subGrantPhoneCode = (
-  <Form.Item noStyle>
-    <Select
-      style={{
-        width: 70,
-      }}
-      showSearch
-    >
-      {countryList.map((item) => {
-        return (
-          <Select.Option key={item.dial_code} value={item.dial_code}>
-            {item.dial_code}
-          </Select.Option>
-        );
-      })}
-    </Select>
-  </Form.Item>
-);
+
 const Page = () => {
   const [addProject, response] = useAddProjectMutation();
   const [subContact, setSubContact] = useState(1);
@@ -110,6 +97,7 @@ const Page = () => {
   const [reportingPeriod, setReportingPeriod] = useState();
   const [subGrant, setSubGrant] = useState([]);
   const [projectDuration, setProjectDuration] = useState();
+  const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
 
   const handleColumn = (props) => {
@@ -119,13 +107,20 @@ const Page = () => {
       if (subContact > 1) setSubContact((prev) => prev - 1);
     }
   };
-  const options = [];
-  for (let i = 10; i < 36; i++) {
-    options.push({
-      value: i.toString(36) + i,
-      label: i.toString(36) + i,
+  // error message
+  const error = () => {
+    messageApi.open({
+      type: "error",
+      content: "Error occured while submitting data",
     });
-  }
+  };
+  // const options = [];
+  // for (let i = 10; i < 36; i++) {
+  //   options.push({
+  //     value: i.toString(36) + i,
+  //     label: i.toString(36) + i,
+  //   });
+  // }
   const getId = new Set();
   const onChangeDivision = (value) => {
     division.map((item) => {
@@ -159,8 +154,14 @@ const Page = () => {
       reportingPeriod,
       subGrant,
     });
-    if (res) navigate("/projectlist");
+
+    if (res.data) {
+      navigate("/projectlist");
+    } else {
+      error();
+    }
   };
+
   const handleNgoApprovalDate = (_, date) => {
     setNgoApprovalDate(date);
   };
@@ -186,6 +187,7 @@ const Page = () => {
 
   return (
     <>
+      {contextHolder}
       <Space
         direction="vertical"
         style={{
@@ -362,6 +364,7 @@ const Page = () => {
                 <Col lg={{ span: 4 }}>
                   <Form.Item label="NGO Approval Date">
                     <DatePicker
+                      format={dateFormat}
                       style={{ width: "100%" }}
                       onChange={handleNgoApprovalDate}
                     />
@@ -422,7 +425,7 @@ const Page = () => {
                 <Col lg={24}>
                   <Form.Item>
                     <Row justify="space-between">
-                      <Col>Sub Grant Partners Name</Col>
+                      <Col>Sub Grant Partners</Col>
                       <Col>
                         <Row style={{ marginBottom: "5px" }} gutter={5}>
                           <Col>
@@ -482,7 +485,7 @@ const Page = () => {
                                   name="subGrantPhoneNumber"
                                   placeholder="Phone Number"
                                   onChange={(e) => handleSubGrantsPartner(e, 0)}
-                                  addonBefore={donorPhoneCode}
+                                  // addonBefore={donorPhoneCode}
                                 />
                               </Form.Item>
                             </Col>
@@ -531,7 +534,7 @@ const Page = () => {
                                 <Input
                                   placeholder="Phone Number"
                                   name="subGrantPhoneNumber"
-                                  addonBefore={subGrantPhoneCode}
+                                  // addonBefore={subGrantPhoneCode}
                                   onChange={(e) => handleSubGrantsPartner(e, 1)}
                                 />
                               </Form.Item>
@@ -581,7 +584,7 @@ const Page = () => {
                                 <Input
                                   placeholder="Phone Number"
                                   name="subGrantPhoneNumber"
-                                  addonBefore={subGrantPhoneCode}
+                                  // addonBefore={subGrantPhoneCode}
                                   onChange={(e) => handleSubGrantsPartner(e, 2)}
                                 />
                               </Form.Item>
@@ -631,7 +634,7 @@ const Page = () => {
                                 <Input
                                   placeholder="Phone Number"
                                   name="subGrantPhoneNumber"
-                                  addonBefore={subGrantPhoneCode}
+                                  // addonBefore={subGrantPhoneCode}
                                   onChange={(e) => handleSubGrantsPartner(e, 3)}
                                 />
                               </Form.Item>
@@ -682,7 +685,7 @@ const Page = () => {
                                 <Input
                                   placeholder="Phone Number"
                                   name="subGrantPhoneNumber"
-                                  addonBefore={subGrantPhoneCode}
+                                  // addonBefore={subGrantPhoneCode}
                                   onChange={(e) => handleSubGrantsPartner(e, 4)}
                                 />
                               </Form.Item>
@@ -728,15 +731,18 @@ const Page = () => {
                 </Col>
                 <Col lg={{ span: 4 }}>
                   <Form.Item
-                    required
                     label="Conversion Rate"
-                    name="rate"
-                    tooltip="USD, GBP, EUR = BDT, If budget is in BDT then Conversion rate will be 1 "
+                    name="conversionRate"
+                    tooltip="USD, GBP, EUR = BDT, If budget is in BDT than no need to give any value by default it's 1 "
                     rules={[
-                      { required: true, message: "Please set conversion rate" },
+                      {
+                        required: form.getFieldValue("currency") !== "BDT",
+                        message: "Please set conversion rate",
+                      },
                     ]}
                   >
                     <InputNumber
+                      addonAfter={suffixSelector}
                       style={{ width: "100%" }}
                       placeholder="Conversion rate"
                     />

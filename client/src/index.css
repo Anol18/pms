@@ -41,6 +41,10 @@
 .action-icon:hover {
   color: rgb(155, 67, 19);
 }
+.ant-table-body {
+  height: 400px;
+  user-select: none;
+}
 /* Works on Chrome and some other WebKit-based browsers */
 ::-webkit-scrollbar {
   width: 5px;
@@ -57,4 +61,21 @@
 
 ::-webkit-scrollbar-track {
   background-color: #f1f1f1;
+}
+.ant-table-body::-webkit-scrollbar {
+  width: 5px; /* Width of the scroll bar */
+  height: 5px; /*height of the scroll bar */
+}
+
+.ant-table-body::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scroll bar thumb */
+  border-radius: 5px; /* Rounded corners for the thumb */
+}
+
+.ant-table-body::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color when hovering over the thumb */
+}
+
+.ant-table-body::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Color of the track behind the thumb */
 }

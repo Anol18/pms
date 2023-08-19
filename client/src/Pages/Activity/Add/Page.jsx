@@ -113,9 +113,15 @@ const Page = () => {
                     items={new Array(3).fill(null).map((_, i) => {
                       const id = String(i + 1);
                       return {
-                        label: `Tab ${id}`,
+                        label: `202${id}`,
                         key: id,
-                        children: `Content of Tab ${id}`,
+                        children: (
+                          <>
+                            <Form.Item name="totalActivity">
+                              <Input placeholder="Total Activity" />
+                            </Form.Item>
+                          </>
+                        ),
                       };
                     })}
                   />

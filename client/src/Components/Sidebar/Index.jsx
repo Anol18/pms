@@ -1,10 +1,7 @@
 // Importing React Components
-import { lazy, useEffect } from "react";
-import { useState, Suspense } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// const Profile = lazy(() => import("../Profile/Profile"));
-// Imporing logo image
-// import logo from "../../assets/logo.png";
 import Profile from "../Profile/Page";
 import Notification from "../NotificationBar/Page";
 import {
@@ -16,15 +13,14 @@ import {
   AppstoreAddOutlined,
   ContainerFilled,
   SettingFilled,
-  CalendarOutlined,
   SnippetsFilled,
   FileDoneOutlined,
   FileSearchOutlined,
 } from "@ant-design/icons";
 
 // Ant design item components
-import { Layout, Menu, theme, Button, Row, Col } from "antd";
-const { Header, Content, Footer, Sider } = Layout;
+import { Layout, Menu, theme, Button } from "antd";
+const { Header, Content, Sider } = Layout;
 
 // Sidebar object return Function
 function getItem(label, key, icon, children, path) {
@@ -40,15 +36,11 @@ function getItem(label, key, icon, children, path) {
 // Sidebar Nav menu items
 const items = [
   getItem("Dashboard", "/", <AppstoreAddOutlined />, null, "/"),
-  //   getItem("Option 2", "2", <DesktopOutlined />),
   getItem("Projects", "sub1", <ProjectOutlined />, [
     getItem("Add Project", "/addproject"),
     getItem("Project List", "/projectlist"),
   ]),
-  // getItem("Programs", "sub2", <CalendarOutlined />, [
-  //   getItem("Add Program", "/addprogram"),
-  //   getItem("Program List", "/association/association-list"),
-  // ]),
+
   getItem("Outcome", "sub3", <FileDoneOutlined />, [
     getItem("Add Outcome", "/addoutcome"),
     getItem("Outcome List", "/outcomelist"),
@@ -71,38 +63,16 @@ const items = [
     getItem("Designation", "/designation"),
     getItem("Office Branch", "/branch"),
     getItem("Budget Description", "/description"),
-    // getItem("Employee List", "/union/union-list"),
+
+    getItem("Notifications Settings", "/notifications"),
   ]),
   getItem("Users", "sub7", <SettingFilled />, [
     getItem("Add User", "/user"),
     getItem("Users List", "/user-list"),
-    // getItem("Employee List", "/union/union-list"),
   ]),
-
-  //   getItem("Accounts", "sub5", <TeamOutlined />, [
-  //     getItem("Add Accounts", "/account/add-account"),
-  //     getItem("Accounts List", "/account/account-list"),
-  //   ]),
-  //   getItem("Training", "sub6", <TeamOutlined />, [
-  //     getItem("Add Trainer", "/training/add-trainer"),
-  //     getItem("Training Category", "/training/training-category"),
-  //     getItem("Training Topic", "/training/training-topic"),
-  //     getItem("Training Entry", "/training/training-entry"),
-  //     getItem("Training List", "/training/training-list"),
-  //   ]),
-  //   getItem("Setting", "sub7", <TeamOutlined />, [
-  //     getItem("National Federation", "/settings/national-federation"),
-  //     getItem("Sectoral Federation", "/settings/sectoral-federation"),
-  //     getItem("Department", "/settings/department"),
-  //     getItem("Designation", "/settings/designation"),
-  //     getItem("Sector", "/settings/sector"),
-  //     getItem("Education", "/settings/education"),
-  //     getItem("Religion", "/settings/religion"),
-  //     getItem("Employment Contract", "/settings/employment-contract"),
-  //     getItem("Machineries", "/settings/machineries"),
-  //   ]),
 ];
 
+// eslint-disable-next-line react/prop-types
 const Index = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [contentPosition, setContentPosition] = useState(200);
