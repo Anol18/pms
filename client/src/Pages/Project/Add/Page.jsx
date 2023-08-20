@@ -12,23 +12,13 @@ import {
   message,
   Upload,
 } from "antd";
-
 const { Header, Content } = Layout;
 const { TextArea } = Input;
 
-async function importJSONFile(filePath) {
-  try {
-    const module = await import(filePath);
-    return module.default;
-  } catch (error) {
-    console.error("Error importing JSON file:", error);
-    return null;
-  }
-}
-const countryList = await importJSONFile("../../../lib/countryList.json");
-const division = await importJSONFile("../../../lib/division.json");
-const district = await importJSONFile("../../../lib/district.json");
-const upazila = await importJSONFile("../../../lib/upazilas.json");
+import division from "../../../lib/division.json";
+import district from "../../../lib/district.json";
+import upazila from "../../../lib/upazilas.json";
+import countryList from "../../../lib/countryList.json";
 
 import {
   InfoCircleOutlined,

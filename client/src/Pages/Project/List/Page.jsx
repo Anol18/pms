@@ -9,6 +9,7 @@ import {
   Space,
   Statistic,
   Table,
+  Tooltip,
 } from "antd";
 import { useProjectListQuery } from "../../../api/apiSlices/projectApi/projectSlice";
 import {
@@ -162,12 +163,14 @@ const Page = () => {
     {
       title: "NGO Approval Date",
       dataIndex: "ngoApprovalDate",
-      width: 100,
+      width: 120,
+      align: "center",
     },
     {
       title: "Donor Name",
       dataIndex: "donorName",
       width: 200,
+      align: "center",
     },
     {
       title: "Project Budget(BDT)",
@@ -211,21 +214,28 @@ const Page = () => {
     {
       title: "Status",
       width: 90,
+      fixed: "right",
       render: () => (
         <>
           <span>
             <Row justify="space-around">
               <Col>
-                <EditOutlined className="action-icon" />
+                <Tooltip title="Edit" color="gold">
+                  <EditOutlined className="action-icon" />
+                </Tooltip>
               </Col>
               <Col>
-                <EyeOutlined
-                  className="action-icon"
-                  onClick={() => dispatch(openDrawer(true))}
-                />
+                <Tooltip title="View" color="green">
+                  <EyeOutlined
+                    className="action-icon"
+                    onClick={() => dispatch(openDrawer(true))}
+                  />
+                </Tooltip>
               </Col>
               <Col>
-                <DeleteOutlined className="action-icon" />
+                <Tooltip title="Delete" color="red">
+                  <DeleteOutlined className="action-icon" />
+                </Tooltip>
               </Col>
             </Row>
           </span>
@@ -287,7 +297,7 @@ const Page = () => {
     //     // total: data.totalCount,
     //   },
     // });
-    initialDataLoad();
+    isSuccess && initialDataLoad();
   }, [isSuccess, isLoading]);
 
   if (isLoading) return <Spinner />;
@@ -306,7 +316,7 @@ const Page = () => {
             <h4 style={{ textAlign: "center" }}>Projects List</h4>
           </Header>
           <Content className="container">
-            <Row gutter={16}>
+            <Row gutter={16} style={{ userSelect: "none" }}>
               <Col lg={{ span: 4 }} xs={24}>
                 <Card bordered={false}>
                   <Statistic

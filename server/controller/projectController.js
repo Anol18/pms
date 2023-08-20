@@ -94,6 +94,12 @@ module.exports = {
         ],
         include: {
           DonorInformation: true,
+
+          Outcome: {
+            include: {
+              Activity: true,
+            },
+          },
         },
       });
       res.status(200).send(response);
