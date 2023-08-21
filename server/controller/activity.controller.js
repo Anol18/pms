@@ -12,30 +12,32 @@ module.exports = {
         select: {
           id: true,
           projectName: true,
+          projectDuration: true,
           Outcome: {
             select: {
               id: true,
               outcomeName: true,
+              Activity: {
+                select: {
+                  id: true,
+                  activityName: true,
+                },
+              },
             },
           },
         },
+        // include: {
+        //   Outcome: true,
+        // },
       });
       res.status(200).send(response);
     } catch (error) {
       console.log(error);
-      res.status(500).send("Internatl Server error");
+      res.status(500).send("Server error");
     }
   },
   post: async (req, res) => {
-    try {
-      const response = await prisma.outcome.create({
-        data: req.body,
-      });
-      res.status(201).send(response);
-    } catch (error) {
-      console.log(error);
-      res.status(500).send("Server error");
-    }
+    console.log(req.body);
   },
   delete: async () => {},
   put: async () => {},

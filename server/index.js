@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 const helmet = require("helmet");
 const projectRoute = require("./routes/projectsRoute");
 const outcomeRoute = require("./routes/outcome.route");
+const activityRoute = require("./routes/activity.route");
 const path = require("path");
 const app = express();
 app.use(cors());
@@ -21,6 +22,7 @@ app.use(express.json());
 // });
 app.use("/api", projectRoute);
 app.use("/api", outcomeRoute);
+app.use("/api", activityRoute);
 
 app.listen(5000, () => {
   console.log("server started");

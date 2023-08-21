@@ -36,7 +36,10 @@ const Page = () => {
         size={[0, 48]}
       >
         <Layout>
-          <Content>
+          <Header className="header">
+            <h4>Add Outcome</h4>
+          </Header>
+          <Content style={{ padding: "20px" }}>
             <Form
               layout="vertical"
               initialValues={{
@@ -84,7 +87,7 @@ const Page = () => {
                       },
                     ]}
                   >
-                    <Input placeholder="Outcome" />
+                    <Input placeholder="Outcome" autoComplete="off" />
                   </Form.Item>
                 </Col>
               </Row>

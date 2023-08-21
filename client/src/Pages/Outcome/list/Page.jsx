@@ -19,68 +19,14 @@ import {
   EditOutlined,
   EyeOutlined,
 } from "@ant-design/icons";
-import { useProjectListQuery } from "../../../api/apiSlices/projectApi/projectSlice";
+
 import { useEffect, useState } from "react";
 import { openDrawer } from "../../../features/ProjectSlice";
 import { useDispatch } from "react-redux";
-const columns = [
-  {
-    title: "#SL",
-    dataIndex: "id",
-    width: 2,
-    align: "center",
-  },
-  // {
-  //   title: "Project",
-  //   width: "30%",
-  //   dataIndex: "projectName",
-  // },
-  {
-    title: "Outcome",
+import { useOutcomeListQuery } from "../../../api/apiSlices/outcome.slice";
 
-    dataIndex: "outComeName",
-    width: 10,
-    align: "center",
-  },
-  {
-    title: "Activities",
-    dataIndex: "activityName",
-    align: "center",
-
-    width: 10,
-  },
-  {
-    title: "Action",
-    align: "center",
-    width: 2,
-    render: () => (
-      <span>
-        <Row justify="space-around">
-          <Col>
-            <Tooltip title="Edit" color="gold">
-              <EditOutlined className="action-icon" />
-            </Tooltip>
-          </Col>
-          <Col>
-            <Tooltip title="View" color="green">
-              <EyeOutlined
-                className="action-icon"
-                onClick={() => dispatch(openDrawer(true))}
-              />
-            </Tooltip>
-          </Col>
-          <Col>
-            <Tooltip title="Delete" color="red">
-              <DeleteOutlined className="action-icon" />
-            </Tooltip>
-          </Col>
-        </Row>
-      </span>
-    ),
-  },
-];
 const Page = () => {
-  const { data, isLoading, isSuccess, error } = useProjectListQuery();
+  const { data, isLoading, isSuccess, error } = useOutcomeListQuery();
   const [tableData, setTableData] = useState(" ");
   const [result, setResult] = useState();
   const dispatch = useDispatch();
@@ -104,11 +50,11 @@ const Page = () => {
       align: "center",
     },
     {
-      title: "Activities",
+      title: "Total Activities",
       dataIndex: "activityName",
       align: "center",
 
-      width: 10,
+      width: 2,
     },
     {
       title: "Action",

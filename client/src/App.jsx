@@ -18,6 +18,7 @@ const AddEmployee = lazy(() => import("./Pages/Employee/add/page"));
 const AddBudget = lazy(() => import("./Pages/DetailBudget/Add/Page"));
 const AddPip = lazy(() => import("./Pages/PIP/add/Page"));
 const Dashboard = lazy(() => import("./Pages/Dashboard/Page"));
+const ActivityList = lazy(() => import("./Pages/Activity/List/page"));
 
 function App() {
   return (
@@ -80,6 +81,14 @@ function App() {
                     element={
                       <Suspense fallback={<Spinner />}>
                         <AddActivity />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/activitylist"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <ActivityList />
                       </Suspense>
                     }
                   />

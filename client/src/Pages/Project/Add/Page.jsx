@@ -206,6 +206,7 @@ const Page = () => {
                 dononePhoneCode: "+1",
                 status: "In Progress",
                 subGrantPhoneCode: "+1",
+                conversionRate: 1.0,
               }}
             >
               <Row gutter={16}>
@@ -726,13 +727,13 @@ const Page = () => {
                     tooltip="USD, GBP, EUR = BDT, If budget is in BDT than no need to give any value by default it's 1 "
                     rules={[
                       {
-                        required: form.getFieldValue("currency") !== "BDT",
+                        required: true,
                         message: "Please set conversion rate",
                       },
                     ]}
                   >
                     <InputNumber
-                      addonAfter={suffixSelector}
+                      addonAfter="BDT"
                       style={{ width: "100%" }}
                       placeholder="Conversion rate"
                     />
