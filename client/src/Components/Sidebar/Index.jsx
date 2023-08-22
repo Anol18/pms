@@ -62,7 +62,7 @@ const items = [
   getItem("Settings", "sub6", <SettingFilled />, [
     getItem("Designation", "/designation"),
     getItem("Office Branch", "/branch"),
-    getItem("Budget Description", "/description"),
+    getItem("Budget Description", "/budgetdescription"),
 
     getItem("Notifications Settings", "/notifications"),
   ]),

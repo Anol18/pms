@@ -19,6 +19,9 @@ const AddBudget = lazy(() => import("./Pages/DetailBudget/Add/Page"));
 const AddPip = lazy(() => import("./Pages/PIP/add/Page"));
 const Dashboard = lazy(() => import("./Pages/Dashboard/Page"));
 const ActivityList = lazy(() => import("./Pages/Activity/List/page"));
+const BudgetDescriptionList = lazy(() =>
+  import("./Pages/BudgetDescription/List/Page")
+);
 
 function App() {
   return (
@@ -113,6 +116,14 @@ function App() {
                     element={
                       <Suspense fallback={<Spinner />}>
                         <AddPip />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/budgetdescription"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <BudgetDescriptionList />
                       </Suspense>
                     }
                   />

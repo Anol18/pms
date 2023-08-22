@@ -76,18 +76,15 @@ const Page = () => {
 
   const handleDateWiseActivity = (e, index) => {
     const { name, value } = e.target;
-    // const updatedList = [...dateWiseActivityCount];
-    // updatedList[index] = {
-    //   ...updatedList[index],
-    //   ["activityCount"]: { name, value },
-    // };
-    // let pushData = {  };
-    let vv = { name: name, year: value };
-    setDateWiseActivity([...dateWiseActivityCount, vv]);
+    const updatedList = [...dateWiseActivityCount];
+    updatedList[index] = {
+      ...updatedList[index],
+      activityCount: { year: name, activityCount: value },
+    };
+    setDateWiseActivity(updatedList);
   };
-  console.log(dateWiseActivityCount);
-  const handleSubmit = async (value, dateWiseActivityCount) => {
-    const res = await addActivity(JSON.stringify(dateWiseActivityCount));
+  const handleSubmit = async (value) => {
+    const res = await addActivity({ value, dateWiseActivityCount });
     console.log(res);
   };
   return (
@@ -172,8 +169,9 @@ const Page = () => {
                   </Form.Item>
                 </Col>
               </Row>
+
               <Row gutter={16}>
-                <Col lg={{ span: 24 }} xs={24}>
+                <Col lg={{ span: 20 }} xs={24}>
                   <Form.Item
                     label="Activity Name"
                     name="activityName"
@@ -189,9 +187,7 @@ const Page = () => {
                     <Input placeholder="Program Name" />
                   </Form.Item>
                 </Col>
-              </Row>
-              <Row>
-                <Col>
+                <Col lg={{ span: 4 }}>
                   <Tabs
                     tabPosition="left"
                     items={dateRange?.map((d, i) => {
@@ -200,7 +196,7 @@ const Page = () => {
                         key: i,
                         children: (
                           <>
-                            <Form.Item id={i}>
+                            <Form.Item id={i} label="Total Activity">
                               <Input
                                 placeholder="Total Activity"
                                 name={d?.year.toString()}

@@ -24,88 +24,7 @@ import { useDispatch } from "react-redux";
 import { openDrawer } from "../../../features/ProjectSlice";
 import ShowData from "../../../Components/viewData/Page";
 const { Header, Content } = Layout;
-const column = [
-  {
-    title: "#SL",
-    dataIndex: "sl",
-    align: "center",
-  },
-  {
-    title: "Project Name",
-    dataIndex: "projectName",
-  },
-  {
-    title: "Project Duration",
-    dataIndex: "projectDuration",
-  },
-  {
-    title: "Location",
-    // dataIndex: "location",
-    width: "10%",
-    render: (text, record) => (
-      // <span style={{ color: "green" }}>{record.upazila}</span>
-      <>
-        <Tag color="geekblue">{record.upazila}</Tag>
-        <br />
-        <br />
-        <Tag color="green">{record.district}</Tag>
-        <br />
-        <br />
-        <Tag color="volcano">{record.Division}</Tag>
-      </>
-    ),
-  },
-  {
-    title: "NGO Approval Date",
-    dataIndex: "ngoApprovalDate",
-  },
-  {
-    title: "Donor Name",
-    dataIndex: "donorName",
-  },
-  {
-    title: "Project Budget",
-  },
-  {
-    title: "Total Expenses",
-  },
-  {
-    title: "Total Activities",
-  },
-  {
-    title: "Activity Completed",
-  },
-  {
-    title: "Remaining Activites",
-  },
-  {
-    title: "Reporting Date",
-  },
-  {
-    title: "Status",
-    width: 90,
-    render: () => (
-      <>
-        <span>
-          <Row justify="space-around">
-            <Col>
-              <EditOutlined className="action-icon" />
-            </Col>
-            <Col>
-              <EyeOutlined
-                className="action-icon"
-                onClick={() => dispatch(openDrawer(true))}
-              />
-            </Col>
-            <Col>
-              <DeleteOutlined className="action-icon" />
-            </Col>
-          </Row>
-        </span>
-      </>
-    ),
-  },
-];
+
 // const getRandomuserParams = (params) => ({
 //   results: params.pagination?.pageSize,
 //   page: params.pagination?.current,
@@ -196,6 +115,12 @@ const Page = () => {
       width: 120,
     },
     {
+      title: "Total Outcome",
+      width: 80,
+      dataIndex: "totalOutcome",
+      align: "center",
+    },
+    {
       title: "Total Activities",
       width: 120,
     },
@@ -244,14 +169,16 @@ const Page = () => {
     },
   ];
   const [tData, setTData] = useState(null);
+  console.log(data);
   let tableData = [];
   let sum = 0.0;
+
   const initialDataLoad = () => {
     data &&
       data.map((item, index) => {
         tableData.push({
           key: index,
-          sl: index + 1,
+          sl: item.id,
           projectName: item.projectName,
           projectDuration: item.projectDuration
             .toString()
@@ -264,6 +191,7 @@ const Page = () => {
           projectBudget: item.projectBudget,
           budgetInCurrency: item.budgetInCurrency,
           conversionRate: item.conversionRate,
+          totalOutcome: item.Outcome.length,
         });
         sum = sum + parseFloat(item.projectBudget);
       });
@@ -316,7 +244,11 @@ const Page = () => {
             <h4 style={{ textAlign: "center" }}>Projects List</h4>
           </Header>
           <Content className="container">
-            <Row gutter={16} style={{ userSelect: "none" }}>
+            <Row
+              gutter={16}
+              style={{ userSelect: "none" }}
+              justify="space-around"
+            >
               <Col lg={{ span: 4 }} xs={24}>
                 <Card bordered={false}>
                   <Statistic
@@ -361,7 +293,7 @@ const Page = () => {
               <Col lg={{ span: 4 }} xs={24}>
                 <Card bordered={false}>
                   <Statistic
-                    title="Total Programs"
+                    title="Total Outcome"
                     value={93}
                     valueStyle={{
                       color: "#3f8600",
@@ -370,7 +302,7 @@ const Page = () => {
                   />
                 </Card>
               </Col>
-              <Col lg={{ span: 4 }} xs={24}>
+              {/* <Col lg={{ span: 4 }} xs={24}>
                 <Card bordered={false}>
                   <Statistic
                     title="Total Programs"
@@ -381,7 +313,7 @@ const Page = () => {
                     prefix={<ArrowUpOutlined />}
                   />
                 </Card>
-              </Col>
+              </Col> */}
               <Col lg={{ span: 4 }} xs={24}>
                 <Card bordered={false}>
                   <Statistic

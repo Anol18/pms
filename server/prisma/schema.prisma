@@ -66,6 +66,7 @@ model Outcome{
 model Activity{
     id Int @id @default(autoincrement())
     activityName String
+    yearlyActivities Json
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     outcome Outcome @relation(fields: [outcomeId],references: [id])
@@ -112,4 +113,14 @@ model Employee{
     emergencyContactPersonsPrimaryPhone String
     emergencyContactPersonsAlternatePhoene String
     relationship String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+
+model BudgetDescription{
+    id Int @id @default(autoincrement())
+    particular String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
