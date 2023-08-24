@@ -6,6 +6,7 @@ import projectSlice from "./features/ProjectSlice";
 import { OutcomeApi } from "./api/apiSlices/outcome.slice";
 import { ActivityApi } from "./api/apiSlices/activity.api.slice";
 import { budgetDescription } from "./api/apiSlices/budgetDescription.api.slice";
+import { detailBudgetApi } from "./api/apiSlices/detailBudget.api.slice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     [OutcomeApi.reducerPath]: OutcomeApi.reducer,
     [ActivityApi.reducerPath]: ActivityApi.reducer,
     [budgetDescription.reducerPath]: budgetDescription.reducer,
+    [detailBudgetApi.reducerPath]: detailBudgetApi.reducer,
     // redux Slice
     projectSlice: projectSlice,
   },
@@ -21,7 +23,8 @@ const store = configureStore({
       .concat(ProjectApi.middleware)
       .concat(OutcomeApi.middleware)
       .concat(ActivityApi.middleware)
-      .concat(budgetDescription.middleware),
+      .concat(budgetDescription.middleware)
+      .concat(detailBudgetApi.middleware),
 });
 // setupListeners(store.dispatch);
 export default store;

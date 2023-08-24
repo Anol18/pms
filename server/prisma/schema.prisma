@@ -81,6 +81,12 @@ model DetailBudget{
         perUnitDescription String
         unit Int
         description String
+        unit2 Int
+        description2 String
+        grossTotal Float
+        tax Float
+        vat Float
+        netTotal Float
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
         activity Activity @relation(fields: [activityId],references: [id])

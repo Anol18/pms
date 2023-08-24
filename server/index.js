@@ -6,6 +6,8 @@ const projectRoute = require("./routes/projectsRoute");
 const outcomeRoute = require("./routes/outcome.route");
 const activityRoute = require("./routes/activity.route");
 const budgetDescriptio = require("./routes/budgetDescription.route");
+const detailsbudget = require("./routes/detailBudget.route");
+
 const path = require("path");
 const { exec } = require("child_process");
 const app = express();
@@ -40,6 +42,7 @@ app.use("/api", projectRoute);
 app.use("/api", outcomeRoute);
 app.use("/api", activityRoute);
 app.use("/api", budgetDescriptio);
+app.use("/api", detailsbudget);
 
 app.listen(5000, () => {
   console.log("server started");

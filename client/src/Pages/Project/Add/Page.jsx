@@ -724,7 +724,7 @@ const Page = () => {
                   <Form.Item
                     label="Conversion Rate"
                     name="conversionRate"
-                    tooltip="USD, GBP, EUR = BDT, If budget is in BDT than no need to give any value by default it's 1 "
+                    tooltip="USD, GBP, EUR = (rate) * BDT, If budget is in BDT than no need to give any value by default it's 1 "
                     rules={[
                       {
                         required: true,

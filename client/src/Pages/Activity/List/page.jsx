@@ -35,6 +35,7 @@ const Page = () => {
       width: 50,
     },
   ];
+
   const OnChangeProjectName = (e) => {
     if (e) {
       for (const item of data) {
@@ -54,6 +55,7 @@ const Page = () => {
       setResult();
     }
   };
+  console.log(result);
   const handleOutcome = (value) => {
     let pushedData = [];
     if (value) {
@@ -76,6 +78,7 @@ const Page = () => {
       setTableData();
     }
   };
+
   const laodTableData = () => {};
   useEffect(() => {
     laodTableData();
@@ -200,7 +203,7 @@ const Page = () => {
                   {result &&
                     result.map((v) => {
                       return (
-                        <Select.Option key={v.id} value={v.outComeName}>
+                        <Select.Option key={v.sl} value={v.outComeName}>
                           {v.outComeName}
                         </Select.Option>
                       );

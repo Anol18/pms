@@ -15,131 +15,26 @@ import { PlusCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 const { Content, Header } = Layout;
 
 import { useState } from "react";
-const columnName = [
-  {
-    title: "#SL",
-    align: "center",
-    dataIndex: "index",
-  },
-  {
-    title: "Description",
-    render: () => <Input style={{ borderRadius: 0 }} />,
-    width: "15%",
-    align: "center",
-  },
-  {
-    title: "Cost Per Unit(BDT)",
-    render: () => <InputNumber style={{ borderRadius: 0 }} />,
-    width: "10%",
-    align: "center",
-  },
-  {
-    title: "Quantity",
-    render: () => <InputNumber style={{ width: "100%", borderRadius: 0 }} />,
-    width: "6%",
-    align: "center",
-  },
-  {
-    title: "Per Unit Description",
-    render: () => (
-      <Select style={{ width: "100%", borderRadius: 0 }} allowClear showSearch>
-        <Select.Option></Select.Option>
-      </Select>
-    ),
-    width: "10%",
-    align: "center",
-  },
-  {
-    title: "Unit",
-    render: () => <InputNumber style={{ width: "100%", borderRadius: 0 }} />,
-    width: "6%",
-    align: "center",
-  },
-  {
-    title: "Description",
-    render: () => (
-      <Select style={{ width: "100%", borderRadius: 0 }} allowClear showSearch>
-        <Select.Option></Select.Option>
-      </Select>
-    ),
-    width: "8%",
-    align: "center",
-  },
-  {
-    title: "Unit",
-    render: () => <InputNumber style={{ width: "100%", borderRadius: 0 }} />,
-    width: "6%",
-    align: "center",
-  },
-  {
-    title: "Description",
-    render: () => (
-      <Select style={{ width: "100%", borderRadius: 0 }} allowClear showSearch>
-        <Select.Option></Select.Option>
-      </Select>
-    ),
-    width: "8%",
-    align: "center",
-  },
-  {
-    title: "Gross Total",
-    render: () => (
-      <InputNumber
-        style={{ width: "100%", borderRadius: 0 }}
-        disabled
-        value="1000"
-      />
-    ),
-    with: "10%",
-    align: "center",
-  },
+import { useDetailBudgetListQuery } from "../../../api/apiSlices/detailBudget.api.slice";
+import { useBudgetDescriptionListQuery } from "../../../api/apiSlices/budgetDescription.api.slice";
 
-  {
-    title: "TAX",
-    render: () => (
-      <InputNumber
-        style={{ width: "100%", borderRadius: 0 }}
-        disabled
-        value="1000"
-      />
-    ),
-    with: "10%",
-    align: "center",
-  },
-  {
-    title: "VAT",
-    render: () => (
-      <InputNumber
-        style={{ width: "100%", borderRadius: 0 }}
-        disabled
-        value="1000"
-      />
-    ),
-    with: "10%",
-    align: "center",
-  },
-  {
-    title: "Net Total",
-    render: () => (
-      <InputNumber
-        style={{ width: "100%", borderRadius: 0 }}
-        disabled
-        value="1000"
-      />
-    ),
-    with: "10%",
-    align: "center",
-  },
-];
 // const dataSocurce = [{ index: 1 }];
 const Page = () => {
+  const { data, isLoading, isSuccess, error } = useDetailBudgetListQuery();
+  const { data: particular, isSuccess: particularSuccess } =
+    useBudgetDescriptionListQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [result, setResult] = useState();
+
+  const [outcomeResult, setOutcomeResult] = useState();
+
   const [addRow, SetAddRow] = useState([
-    { index: 1 },
-    { index: 2 },
-    { index: 3 },
-    { index: 4 },
-    { index: 5 },
+    { index: 1, key: 1 },
+    { index: 2, key: 2 },
+    { index: 3, key: 3 },
+    { index: 4, key: 4 },
+    { index: 5, key: 5 },
   ]);
   const showModal = () => {
     setIsModalOpen(true);
@@ -156,6 +51,209 @@ const Page = () => {
     SetAddRow([...addRow, { index: dataSource, dataSource }]);
     handleOk();
   };
+  let showData = [];
+  const handleActivityTable = (e) => {
+    console.log(e);
+  };
+  const columnName = [
+    {
+      title: "#SL",
+      align: "center",
+      dataIndex: "index",
+    },
+    {
+      title: "Description",
+      render: (text, record, index) => (
+        <Select
+          style={{ width: "100%" }}
+          onChange={handleActivityTable}
+          allowClear
+          showSearch
+        >
+          {particularSuccess &&
+            particular.map((item) => {
+              return (
+                <Select.Option key={item.id} value={item.particular}>
+                  {item.particular}
+                </Select.Option>
+              );
+            })}
+        </Select>
+      ),
+      width: "15%",
+      align: "center",
+    },
+    {
+      title: "Cost Per Unit(BDT)",
+      render: () => <InputNumber onChange={handleActivityTable} />,
+      width: "10%",
+      align: "center",
+    },
+    {
+      title: "Quantity",
+      render: () => (
+        <InputNumber style={{ width: "100%" }} onChange={handleActivityTable} />
+      ),
+      width: "6%",
+      align: "center",
+    },
+    {
+      title: "Per Unit Description",
+      render: () => (
+        <Select
+          style={{ width: "100%" }}
+          allowClear
+          showSearch
+          onChange={handleActivityTable}
+        >
+          <Select.Option value="2"> sad</Select.Option>
+        </Select>
+      ),
+      width: "10%",
+      align: "center",
+    },
+    {
+      title: "Unit",
+      render: () => (
+        <InputNumber style={{ width: "100%" }} onChange={handleActivityTable} />
+      ),
+      width: "6%",
+      align: "center",
+    },
+    {
+      title: "Description",
+      render: () => (
+        <Select
+          style={{ width: "100%" }}
+          allowClear
+          showSearch
+          onChange={handleActivityTable}
+        >
+          <Select.Option value="2">sdf</Select.Option>
+        </Select>
+      ),
+      width: "8%",
+      align: "center",
+    },
+    {
+      title: "Unit",
+      render: () => (
+        <InputNumber style={{ width: "100%" }} onChange={handleActivityTable} />
+      ),
+      width: "6%",
+      align: "center",
+    },
+    {
+      title: "Description",
+      render: () => (
+        <Select
+          style={{ width: "100%" }}
+          allowClear
+          showSearch
+          onChange={handleActivityTable}
+        >
+          <Select.Option value="2">sdf</Select.Option>
+        </Select>
+      ),
+      width: "8%",
+      align: "center",
+    },
+    {
+      title: "Gross Total",
+      render: () => (
+        <InputNumber
+          style={{ width: "100%" }}
+          disabled
+          value="1000"
+          onChange={handleActivityTable}
+        />
+      ),
+      with: "10%",
+      align: "center",
+    },
+
+    {
+      title: "TAX",
+      render: (text, record, index) => (
+        <InputNumber
+          onChange={handleActivityTable}
+          style={{ width: "100%" }}
+          disabled
+          value={record.tax}
+        />
+      ),
+      with: "10%",
+      align: "center",
+    },
+    {
+      title: "VAT",
+      render: () => (
+        <InputNumber
+          onChange={handleActivityTable}
+          style={{ width: "100%" }}
+          disabled
+          value="1000"
+        />
+      ),
+      with: "10%",
+      align: "center",
+    },
+    {
+      title: "Net Total",
+      render: () => (
+        <InputNumber
+          onChange={handleActivityTable}
+          style={{ width: "100%" }}
+          disabled
+          value="1000"
+        />
+      ),
+      with: "10%",
+      align: "center",
+    },
+  ];
+  const OnChangeProject = (e) => {
+    if (e) {
+      for (const item of data) {
+        if (item.projectName === e) {
+          item.Outcome?.map((v, i) => {
+            showData.push({
+              key: item.id + i,
+              id: v.id,
+              outComeName: v.outcomeName,
+              activity: v.Activity,
+            });
+          });
+          setResult(showData);
+          break;
+        }
+      }
+    } else {
+      setResult();
+    }
+    showData = [];
+  };
+
+  let showOutComeName = [];
+  const onChangeOutcome = (e) => {
+    if (e) {
+      for (const item of result) {
+        console.log(item);
+        item.activity?.map((v, i) => {
+          showOutComeName.push({
+            key: i,
+            id: v.id,
+            activityName: v.activityName,
+          });
+        });
+        setOutcomeResult(showOutComeName);
+        break;
+      }
+    } else {
+      setOutcomeResult();
+    }
+    showOutComeName = [];
+  };
   return (
     <>
       <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
@@ -170,7 +268,7 @@ const Page = () => {
           <Content>
             <Form layout="vertical" style={{ padding: "20px" }}>
               <Row>
-                <Col lg={{ span: 24 }}>
+                <Col lg={{ span: 24 }} xs={24}>
                   <Form.Item
                     label="Project"
                     required
@@ -181,14 +279,26 @@ const Page = () => {
                       },
                     ]}
                   >
-                    <Select allowClear showSearch placeholder="Select Project">
-                      <Select.Option>sad</Select.Option>
+                    <Select
+                      allowClear
+                      showSearch
+                      placeholder="Select Project"
+                      onChange={OnChangeProject}
+                    >
+                      {isSuccess &&
+                        data.map((i) => {
+                          return (
+                            <Select.Option key={i.id} value={i.projectName}>
+                              {i.projectName}
+                            </Select.Option>
+                          );
+                        })}
                     </Select>
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
-                <Col lg={{ span: 24 }}>
+                <Col lg={{ span: 24 }} xs={24}>
                   <Form.Item
                     label="Outcome"
                     required
@@ -199,17 +309,30 @@ const Page = () => {
                       },
                     ]}
                   >
-                    <Select allowClear showSearch placeholder="Select Outcome">
-                      <Select.Option></Select.Option>
+                    <Select
+                      allowClear
+                      showSearch
+                      placeholder="Select Outcome"
+                      onChange={onChangeOutcome}
+                    >
+                      {result &&
+                        result.map((i) => {
+                          return (
+                            <Select.Option key={i.id} value={i.id}>
+                              {i.outComeName}
+                            </Select.Option>
+                          );
+                        })}
                     </Select>
                   </Form.Item>
                 </Col>
               </Row>
               <Row>
-                <Col lg={{ span: 24 }}>
+                <Col lg={{ span: 24 }} xs={24}>
                   <Form.Item
                     label="Activity"
                     required
+                    name="activity"
                     rules={[
                       {
                         required: true,
@@ -218,7 +341,14 @@ const Page = () => {
                     ]}
                   >
                     <Select allowClear showSearch placeholder="Select Activity">
-                      <Select.Option></Select.Option>
+                      {outcomeResult &&
+                        outcomeResult.map((i) => {
+                          return (
+                            <Select.Option key={i.id} value={i.id}>
+                              {i.activityName}
+                            </Select.Option>
+                          );
+                        })}
                     </Select>
                   </Form.Item>
                 </Col>
@@ -279,7 +409,7 @@ const Page = () => {
                 <Col>
                   <InfoCircleOutlined style={{ color: "#4477CE" }} />
                 </Col>
-                <Col> This will add a new activity particular row</Col>
+                <Col> A new row will be added</Col>
               </Row>
             </span>
             <Row justify="end" gutter={10} style={{ marginTop: "20px" }}>
@@ -288,7 +418,7 @@ const Page = () => {
               </Col>
               <Col>
                 <Button type="primary" onClick={handleParticularRow}>
-                  Add New
+                  Confirm
                 </Button>
               </Col>
             </Row>

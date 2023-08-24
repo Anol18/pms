@@ -253,7 +253,7 @@ const Page = () => {
                 <Card bordered={false}>
                   <Statistic
                     title="Total Projects"
-                    value={tData && tData.length}
+                    value={tData && tData.length ? tData.length : 0}
                     valueStyle={{
                       color: "#3f8600",
                     }}
