@@ -5,7 +5,7 @@ const Page = () => {
     <>
       <Space direction="vertical" style={{ width: "100%" }}>
         <Layout>
-          <Content style={{ padding: "20px" }}>
+          <Content style={{ padding: "20px", paddingBottom: "50px" }}>
             <Row gutter={16}>
               <Col lg={{ span: 12 }}>
                 <h4>Recent activities are accomplished </h4>
@@ -17,6 +17,18 @@ const Page = () => {
                     },
                     {
                       id: 2,
+                      name: "Lily",
+                    },
+                    {
+                      id: 3,
+                      name: "Lily",
+                    },
+                    {
+                      id: 4,
+                      name: "Lily",
+                    },
+                    {
+                      id: 5,
                       name: "Lily",
                     },
                   ]}
@@ -50,6 +62,18 @@ const Page = () => {
                     },
                     {
                       id: 2,
+                      name: "Lily",
+                    },
+                    {
+                      id: 3,
+                      name: "Lily",
+                    },
+                    {
+                      id: 4,
+                      name: "Lily",
+                    },
+                    {
+                      id: 5,
                       name: "Lily",
                     },
                   ]}

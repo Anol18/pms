@@ -24,6 +24,7 @@ ChartJS.register(
 );
 const options = {
   responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       position: "top",
@@ -49,20 +50,20 @@ const labels = [
   "November",
   "December",
 ];
-
+const date = new Date().getFullYear();
 const data = {
   labels,
   datasets: [
     {
-      label: "2023",
-      data: labels.map(() => Math.floor(Math.random() * 50) + 1),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
+      label: date,
+      data: labels.map(() => Math.floor(Math.random() * 100000) + 10),
+      backgroundColor: "#78C1F3",
     },
   ],
 };
 
 const Page = () => {
-  return <Bar options={options} data={data} />;
+  return <Bar options={options} data={data} width="200%" height={400} />;
 };
 
 export default Page;

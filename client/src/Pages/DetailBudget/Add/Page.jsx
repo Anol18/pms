@@ -14,7 +14,7 @@ import {
 import { PlusCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 const { Content, Header } = Layout;
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDetailBudgetListQuery } from "../../../api/apiSlices/detailBudget.api.slice";
 import { useBudgetDescriptionListQuery } from "../../../api/apiSlices/budgetDescription.api.slice";
 
@@ -26,15 +26,29 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [result, setResult] = useState();
+  const ref = useRef();
 
   const [outcomeResult, setOutcomeResult] = useState();
+  const [tax, setTax] = useState(0);
+  const [budgetValues, setBudgetValues] = useState();
 
-  const [addRow, SetAddRow] = useState([
-    { index: 1, key: 1 },
-    { index: 2, key: 2 },
-    { index: 3, key: 3 },
-    { index: 4, key: 4 },
-    { index: 5, key: 5 },
+  const [addRow, setAddRow] = useState([
+    {
+      key: 0,
+      index: 0,
+      particular: "",
+      costPerUnit: "",
+      quantity: "",
+      perUnitDescription: "",
+      unit: "",
+      description: "",
+      desUnit: "",
+      description2: "",
+      gross: "",
+      tax: "",
+      vat: "",
+      net: "",
+    },
   ]);
   const showModal = () => {
     setIsModalOpen(true);
@@ -46,14 +60,35 @@ const Page = () => {
     setIsModalOpen(false);
   };
   const handleParticularRow = () => {
-    let dataSource = [...addRow];
-    dataSource = dataSource.length + 1;
-    SetAddRow([...addRow, { index: dataSource, dataSource }]);
+    const newRow = {
+      key: addRow.length + 1,
+      index: addRow.length,
+      particular: "",
+      costPerUnit: "",
+      quantity: "",
+      perUnitDescription: "",
+      unit: "",
+      description: "",
+      desUnit: "",
+      description2: "",
+      gross: "",
+      tax: "",
+      vat: "",
+      net: "",
+    };
+    setAddRow([...addRow, newRow]);
     handleOk();
   };
   let showData = [];
-  const handleActivityTable = (e) => {
-    console.log(e);
+
+  const handleActivityTable = (index, field, value) => {
+    const updatedRows = addRow.map((row) => {
+      if (row.index === index) {
+        return { ...row, [field]: value };
+      }
+      return row;
+    });
+    setAddRow(updatedRows);
   };
   const columnName = [
     {
@@ -62,13 +97,16 @@ const Page = () => {
       dataIndex: "index",
     },
     {
-      title: "Description",
+      title: "Particular",
       render: (text, record, index) => (
         <Select
           style={{ width: "100%" }}
-          onChange={handleActivityTable}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "particular", value)
+          }
           allowClear
           showSearch
+          name="particular"
         >
           {particularSuccess &&
             particular.map((item) => {
@@ -85,26 +123,42 @@ const Page = () => {
     },
     {
       title: "Cost Per Unit(BDT)",
-      render: () => <InputNumber onChange={handleActivityTable} />,
+      render: (index, field, value) => (
+        <InputNumber
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "costPerUnit", value)
+          }
+          name="costPerUnit"
+        />
+      ),
       width: "10%",
       align: "center",
     },
     {
       title: "Quantity",
-      render: () => (
-        <InputNumber style={{ width: "100%" }} onChange={handleActivityTable} />
+      render: (index, field, value) => (
+        <InputNumber
+          style={{ width: "100%" }}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "quantity", value)
+          }
+          name="quantity"
+        />
       ),
       width: "6%",
       align: "center",
     },
     {
       title: "Per Unit Description",
-      render: () => (
+      render: (index, field, value) => (
         <Select
           style={{ width: "100%" }}
           allowClear
           showSearch
-          onChange={handleActivityTable}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "perUnitDescription", value)
+          }
+          name="perUnitDescription"
         >
           <Select.Option value="2"> sad</Select.Option>
         </Select>
@@ -114,20 +168,29 @@ const Page = () => {
     },
     {
       title: "Unit",
-      render: () => (
-        <InputNumber style={{ width: "100%" }} onChange={handleActivityTable} />
+      render: (index, field, value) => (
+        <InputNumber
+          style={{ width: "100%" }}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "unit", value)
+          }
+          name="unit"
+        />
       ),
       width: "6%",
       align: "center",
     },
     {
       title: "Description",
-      render: () => (
+      render: (index, field, value) => (
         <Select
           style={{ width: "100%" }}
           allowClear
           showSearch
-          onChange={handleActivityTable}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "description", value)
+          }
+          name="description"
         >
           <Select.Option value="2">sdf</Select.Option>
         </Select>
@@ -137,20 +200,29 @@ const Page = () => {
     },
     {
       title: "Unit",
-      render: () => (
-        <InputNumber style={{ width: "100%" }} onChange={handleActivityTable} />
+      render: (index, field, value) => (
+        <InputNumber
+          style={{ width: "100%" }}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "desUnit", value)
+          }
+          name="desUnit"
+        />
       ),
       width: "6%",
       align: "center",
     },
     {
       title: "Description",
-      render: () => (
+      render: (index, field, value) => (
         <Select
           style={{ width: "100%" }}
           allowClear
           showSearch
-          onChange={handleActivityTable}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "description2", value)
+          }
+          name="description2"
         >
           <Select.Option value="2">sdf</Select.Option>
         </Select>
@@ -160,12 +232,15 @@ const Page = () => {
     },
     {
       title: "Gross Total",
-      render: () => (
+      render: (index, field, value) => (
         <InputNumber
           style={{ width: "100%" }}
           disabled
           value="1000"
-          onChange={handleActivityTable}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "gross", value)
+          }
+          name="gross"
         />
       ),
       with: "10%",
@@ -174,12 +249,15 @@ const Page = () => {
 
     {
       title: "TAX",
-      render: (text, record, index) => (
+      render: (index, field, value) => (
         <InputNumber
-          onChange={handleActivityTable}
+          name="tax"
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "tax", value)
+          }
           style={{ width: "100%" }}
           disabled
-          value={record.tax}
+          // value={tax}
         />
       ),
       with: "10%",
@@ -187,12 +265,15 @@ const Page = () => {
     },
     {
       title: "VAT",
-      render: () => (
+      render: (index, field, value) => (
         <InputNumber
-          onChange={handleActivityTable}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "vat", value)
+          }
           style={{ width: "100%" }}
           disabled
           value="1000"
+          name="vat"
         />
       ),
       with: "10%",
@@ -200,18 +281,22 @@ const Page = () => {
     },
     {
       title: "Net Total",
-      render: () => (
+      render: (index, field, value) => (
         <InputNumber
-          onChange={handleActivityTable}
+          onChange={(value) =>
+            handleActivityTable(addRow.length - 1, "net", value)
+          }
           style={{ width: "100%" }}
           disabled
           value="1000"
+          name="net"
         />
       ),
       with: "10%",
       align: "center",
     },
   ];
+
   const OnChangeProject = (e) => {
     if (e) {
       for (const item of data) {
@@ -235,10 +320,11 @@ const Page = () => {
   };
 
   let showOutComeName = [];
+
+  // form onChange handler
   const onChangeOutcome = (e) => {
     if (e) {
       for (const item of result) {
-        console.log(item);
         item.activity?.map((v, i) => {
           showOutComeName.push({
             key: i,
@@ -254,6 +340,7 @@ const Page = () => {
     }
     showOutComeName = [];
   };
+
   return (
     <>
       <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
