@@ -15,7 +15,10 @@ import { PlusCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 const { Content, Header } = Layout;
 
 import { useEffect, useRef, useState } from "react";
-import { useDetailBudgetListQuery } from "../../../api/apiSlices/detailBudget.api.slice";
+import {
+  useAddDetailBudgetMutation,
+  useDetailBudgetListQuery,
+} from "../../../api/apiSlices/detailBudget.api.slice";
 import { useBudgetDescriptionListQuery } from "../../../api/apiSlices/budgetDescription.api.slice";
 
 // const dataSocurce = [{ index: 1 }];
@@ -24,6 +27,7 @@ const Page = () => {
   const { data: particular, isSuccess: particularSuccess } =
     useBudgetDescriptionListQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [addDetailBudget] = useAddDetailBudgetMutation();
 
   const [result, setResult] = useState();
   const ref = useRef();
@@ -31,6 +35,7 @@ const Page = () => {
   const [outcomeResult, setOutcomeResult] = useState();
   const [tax, setTax] = useState(0);
   const [budgetValues, setBudgetValues] = useState();
+  const [netTotal, setNetTotal] = useState(0);
 
   const [addRow, setAddRow] = useState([
     {
@@ -45,9 +50,9 @@ const Page = () => {
       desUnit: "",
       description2: "",
       gross: "",
-      tax: "",
-      vat: "",
-      net: "",
+      tax: 0,
+      vat: 0,
+      net: 0,
     },
   ]);
   const showModal = () => {
@@ -71,12 +76,19 @@ const Page = () => {
       description: "",
       desUnit: "",
       description2: "",
-      gross: "",
-      tax: "",
-      vat: "",
-      net: "",
+      gross: 0,
+      tax: 0,
+      vat: 0,
+      net: 0,
     };
     setAddRow([...addRow, newRow]);
+    const updatedNetTotal = addRow.reduce((total, row) => {
+      const { gross, vat, tax } = row;
+      const net = gross - (gross * (vat / 100) + gross * (tax / 100));
+      return total + net;
+    }, 0);
+
+    setNetTotal(updatedNetTotal);
     handleOk();
   };
   let showData = [];
@@ -89,6 +101,16 @@ const Page = () => {
       return row;
     });
     setAddRow(updatedRows);
+    const updatedRowsWithTax = updatedRows.map((row) => {
+      const { costPerUnit, quantity, desUnit, unit, vat, tax } = row;
+      const gross = costPerUnit * quantity * desUnit * unit;
+      let net = gross - (gross * (vat / 100.0) + gross * (tax / 100));
+
+      // setNetTotal((prev) => parseInt(prev) + parseInt(net));
+
+      return { ...row, gross, net };
+    });
+    setAddRow(updatedRowsWithTax);
   };
   const columnName = [
     {
@@ -235,8 +257,8 @@ const Page = () => {
       render: (index, field, value) => (
         <InputNumber
           style={{ width: "100%" }}
-          disabled
-          value="1000"
+          // disabled
+          // value="1000"
           onChange={(value) =>
             handleActivityTable(addRow.length - 1, "gross", value)
           }
@@ -256,7 +278,7 @@ const Page = () => {
             handleActivityTable(addRow.length - 1, "tax", value)
           }
           style={{ width: "100%" }}
-          disabled
+          // disabled
           // value={tax}
         />
       ),
@@ -271,8 +293,8 @@ const Page = () => {
             handleActivityTable(addRow.length - 1, "vat", value)
           }
           style={{ width: "100%" }}
-          disabled
-          value="1000"
+          // disabled
+          // value="1000"
           name="vat"
         />
       ),
@@ -287,8 +309,8 @@ const Page = () => {
             handleActivityTable(addRow.length - 1, "net", value)
           }
           style={{ width: "100%" }}
-          disabled
-          value="1000"
+          // disabled
+          // value="1000"
           name="net"
         />
       ),
@@ -340,6 +362,18 @@ const Page = () => {
     }
     showOutComeName = [];
   };
+  const handleSubmit = async (e) => {
+    const res = await addDetailBudget({ e, addRow });
+    // console.log(e, addRow);
+    console.log(res);
+  };
+  // console.log(addRow);
+
+  // useEffect(() => {
+  //   addRow.map((item) => {
+  //     setNetTotal((prev) => parseInt(prev) + parseInt(item.net));
+  //   });
+  // }, [addRow]);
 
   return (
     <>
@@ -353,7 +387,11 @@ const Page = () => {
             </Row>
           </Header>
           <Content>
-            <Form layout="vertical" style={{ padding: "20px" }}>
+            <Form
+              layout="vertical"
+              style={{ padding: "20px" }}
+              onFinish={handleSubmit}
+            >
               <Row>
                 <Col lg={{ span: 24 }} xs={24}>
                   <Form.Item
@@ -455,7 +493,7 @@ const Page = () => {
                   <b>Total:</b>{" "}
                 </Col>
                 <Col>
-                  <b>000 BDT</b>
+                  <b>{netTotal} BDT</b>
                 </Col>
               </Row>
               <Row style={{ marginTop: "30px" }}>
@@ -478,7 +516,9 @@ const Page = () => {
                   <Button>Reset</Button>
                 </Col>
                 <Col>
-                  <Button type="primary">Submit</Button>
+                  <Button type="primary" htmlType="submit">
+                    Submit
+                  </Button>
                 </Col>
               </Row>
             </Form>

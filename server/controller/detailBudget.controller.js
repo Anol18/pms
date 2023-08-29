@@ -30,7 +30,12 @@ module.exports = {
       res.status(500).send("Internatl Server error");
     }
   },
-  post: async (req, res) => {},
+  post: async (req, res) => {
+    try {
+      console.log(req.body);
+      res.send("");
+    } catch (error) {}
+  },
   delete: async (req, res) => {},
   put: async (req, res) => {},
 };

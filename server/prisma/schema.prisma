@@ -91,7 +91,16 @@ model DetailBudget{
         updatedAt DateTime @updatedAt
         activity Activity @relation(fields: [activityId],references: [id])
         activityId Int
+        ActivityTotal ActivityTotal[]
 }
+model ActivityTotal{
+    id Int @id @default(autoincrement())
+    grossTotal Float
+    netTotal Float
+    detailBudget DetailBudget @relation(fields: [detailBudgetId],references: [id])
+    detailBudgetId Int
+}
+
 model Employee{
     id Int @id @default(autoincrement())
     fullName String
