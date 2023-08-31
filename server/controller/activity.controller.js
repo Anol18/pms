@@ -1,5 +1,4 @@
 const { PrismaClient } = require("@prisma/client");
-const { response } = require("express");
 const prisma = new PrismaClient();
 module.exports = {
   get: async (req, res) => {
@@ -22,6 +21,7 @@ module.exports = {
                 select: {
                   id: true,
                   activityName: true,
+                  index: true,
                 },
               },
             },
@@ -41,10 +41,24 @@ module.exports = {
         return item.activityCount;
       });
       const data = await Promise.all(dataPromises);
+      const { index } = await prisma.Outcome.findUnique({
+        where: {
+          id: outcome,
+        },
+        select: {
+          index: true,
+        },
+      });
+      const count = await prisma.Activity.findMany({
+        where: {
+          outcomeId: outcome,
+        },
+      });
       const response = await prisma.Activity.create({
         data: {
           activityName: activityName,
           outcomeId: outcome,
+          index: parseFloat(index + "." + count + 1),
           yearlyActivities: data,
         },
       });

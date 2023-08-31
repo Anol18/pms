@@ -12,7 +12,7 @@ import {
   Table,
   Modal,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 
 import {
@@ -26,7 +26,7 @@ const Page = () => {
   const [loadOutcome, setLoadOutcome] = useState();
   const [dateRange, setDateRange] = useState();
   const [dateWiseActivityCount, setDateWiseActivity] = useState([]);
-  const { data, isLoading, error, isSuccess } = useActivityListQuery();
+  const { data, isLoading, error, isSuccess, refetch } = useActivityListQuery();
   const [addActivity, response] = useAddActivityMutation();
   function generateYearSeries(startDate, endDate) {
     // console.log(data);
@@ -85,8 +85,10 @@ const Page = () => {
   };
   const handleSubmit = async (value) => {
     const res = await addActivity({ value, dateWiseActivityCount });
-    console.log(res);
   };
+  useEffect(() => {
+    refetch();
+  }, []);
   return (
     <>
       <Space

@@ -84,7 +84,7 @@ const Page = () => {
     setAddRow([...addRow, newRow]);
     const updatedNetTotal = addRow.reduce((total, row) => {
       const { gross, vat, tax } = row;
-      const net = gross - (gross * (vat / 100) + gross * (tax / 100));
+      const net = gross + (gross * (vat / 100) + gross * (tax / 100));
       return total + net;
     }, 0);
 
@@ -104,13 +104,22 @@ const Page = () => {
     const updatedRowsWithTax = updatedRows.map((row) => {
       const { costPerUnit, quantity, desUnit, unit, vat, tax } = row;
       const gross = costPerUnit * quantity * desUnit * unit;
-      let net = gross - (gross * (vat / 100.0) + gross * (tax / 100));
+      let net = gross + (gross * (vat / 100.0) + gross * (tax / 100));
 
       // setNetTotal((prev) => parseInt(prev) + parseInt(net));
 
       return { ...row, gross, net };
     });
     setAddRow(updatedRowsWithTax);
+  };
+  const handleCalucation = () => {
+    const updatedNetTotal = addRow.reduce((total, row) => {
+      const { gross, vat, tax } = row;
+      const net = gross + (gross * (vat / 100) + gross * (tax / 100));
+      return total + net;
+    }, 0);
+
+    setNetTotal(updatedNetTotal);
   };
   const columnName = [
     {
@@ -157,7 +166,7 @@ const Page = () => {
       align: "center",
     },
     {
-      title: "Quantity",
+      title: "Object Unit",
       render: (index, field, value) => (
         <InputNumber
           style={{ width: "100%" }}
@@ -171,7 +180,7 @@ const Page = () => {
       align: "center",
     },
     {
-      title: "Per Unit Description",
+      title: "Object Type",
       render: (index, field, value) => (
         <Select
           style={{ width: "100%" }}
@@ -189,7 +198,7 @@ const Page = () => {
       align: "center",
     },
     {
-      title: "Unit",
+      title: "Activity Unit",
       render: (index, field, value) => (
         <InputNumber
           style={{ width: "100%" }}
@@ -203,7 +212,7 @@ const Page = () => {
       align: "center",
     },
     {
-      title: "Description",
+      title: "Activity Type",
       render: (index, field, value) => (
         <Select
           style={{ width: "100%" }}
@@ -221,7 +230,7 @@ const Page = () => {
       align: "center",
     },
     {
-      title: "Unit",
+      title: "Duration Unit",
       render: (index, field, value) => (
         <InputNumber
           style={{ width: "100%" }}
@@ -235,7 +244,7 @@ const Page = () => {
       align: "center",
     },
     {
-      title: "Description",
+      title: "Duration Type",
       render: (index, field, value) => (
         <Select
           style={{ width: "100%" }}
@@ -244,9 +253,23 @@ const Page = () => {
           onChange={(value) =>
             handleActivityTable(addRow.length - 1, "description2", value)
           }
-          name="description2"
+          name="durationUnit"
         >
-          <Select.Option value="2">sdf</Select.Option>
+          <Select.Option value="Min/Mins" key={1}>
+            Min/Mins
+          </Select.Option>
+          <Select.Option value="Hr/Hrs" key={2}>
+            Hr/Hrs
+          </Select.Option>
+          <Select.Option value="Day/Days" key={3}>
+            Day/Days
+          </Select.Option>
+          <Select.Option value="Mo/Mos" key={4}>
+            Mo/Mos
+          </Select.Option>
+          <Select.Option value="Yr/Yrs" key={5}>
+            Yr/Yrs
+          </Select.Option>
         </Select>
       ),
       width: "8%",
@@ -316,6 +339,14 @@ const Page = () => {
       ),
       with: "10%",
       align: "center",
+    },
+    {
+      title: "",
+      render: () => (
+        <>
+          <Button onClick={handleCalucation}>Add</Button>
+        </>
+      ),
     },
   ];
 

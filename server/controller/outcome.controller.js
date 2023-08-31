@@ -15,6 +15,7 @@ module.exports = {
           Outcome: {
             select: {
               id: true,
+              index: true,
               outcomeName: true,
             },
           },
@@ -28,8 +29,18 @@ module.exports = {
   },
   post: async (req, res) => {
     try {
+      const { projectID } = req.body;
+      const count = await prisma.outcome.count({
+        where: {
+          projectID: projectID,
+        },
+      });
+      console.log(count);
       const response = await prisma.outcome.create({
-        data: req.body,
+        data: {
+          index: count + 1,
+          ...req.body,
+        },
       });
       res.status(201).send(response);
     } catch (error) {

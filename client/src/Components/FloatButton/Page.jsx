@@ -8,7 +8,8 @@ const Page = () => {
         trigger="hover"
         type="primary"
         style={{
-          left: 150,
+          right: 25,
+          bottom: 20,
         }}
         icon={<CustomerServiceOutlined />}
       >

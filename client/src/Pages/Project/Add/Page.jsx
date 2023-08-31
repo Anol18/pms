@@ -770,7 +770,7 @@ const Page = () => {
                         In Progress
                       </Select.Option>
                       <Select.Option value="On Hold">On Hold</Select.Option>
-                      <Select.Option value="Cancelled">Cancelled</Select.Option>
+                      <Select.Option value="Canceled">Canceled</Select.Option>
                       <Select.Option value="Finished">Finished</Select.Option>
                     </Select>
                   </Form.Item>

@@ -10,6 +10,7 @@ import {
   Statistic,
   Table,
   Tooltip,
+  Button,
 } from "antd";
 import { useProjectListQuery } from "../../../api/apiSlices/projectApi/projectSlice";
 import {
@@ -138,6 +139,19 @@ const Page = () => {
     },
     {
       title: "Status",
+      width: 120,
+      // dataIndex: "status",
+      align: "center",
+      render: (_, record) => (
+        <>
+          <Tag color={record.statusColor} style={{ fontWeight: 700 }}>
+            {record.status}
+          </Tag>
+        </>
+      ),
+    },
+    {
+      title: "Actions",
       width: 90,
       fixed: "right",
       render: () => (
@@ -180,6 +194,13 @@ const Page = () => {
           key: index,
           sl: item.id,
           projectName: item.projectName,
+          status: item.status,
+          statusColor:
+            (item.status === "In Progress" && "#0074D9") ||
+            (item.status === "Not Started" && "#AAAAAA") ||
+            (item.status === "On Hold" && "#FF851B") ||
+            (item.status === "Canceled" && "#FF4136") ||
+            (item.status === "Finished" && "#2ECC40"),
           projectDuration: item.projectDuration
             .toString()
             .replace(/,/g, " to "),

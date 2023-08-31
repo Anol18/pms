@@ -51,7 +51,7 @@ const items = [
   ]),
   getItem("Detail Bidget", "sub12", <FileSearchOutlined />, [
     getItem("Add Budget", "/addbudget"),
-    getItem("Budget List", "/budgetList"),
+    getItem("Budget List", "/detailedbudgetlist"),
   ]),
 
   getItem("PIP", "sub4", <SnippetsFilled />, [getItem("Generate PIP", "/pip")]),

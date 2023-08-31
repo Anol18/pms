@@ -64,7 +64,7 @@ const Page = () => {
           if (v.outcomeName === value) {
             v.Activity.map((item, i) => {
               pushedData.push({
-                sl: i + 1,
+                sl: item.index,
                 activityName: item.activityName,
               });
             });

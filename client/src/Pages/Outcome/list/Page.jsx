@@ -114,7 +114,7 @@ const Page = () => {
           item.Outcome?.map((v, i) => {
             showData.push({
               key: item.id + i,
-              id: item.id + "." + (i + 1),
+              id: v.index,
               outComeName: v.outcomeName,
             });
           });

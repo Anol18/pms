@@ -22,7 +22,8 @@ const ActivityList = lazy(() => import("./Pages/Activity/List/page"));
 const BudgetDescriptionList = lazy(() =>
   import("./Pages/BudgetDescription/List/Page")
 );
-
+const DetailBudgetList = lazy(() => import("./Pages/DetailBudget/List/Page"));
+const FloatButton = lazy(() => import("./Components/FloatButton/Page"));
 function App() {
   return (
     <>
@@ -37,6 +38,9 @@ function App() {
           <Layout>
             <Suspense fallback={<Spinner />}>
               <Sidebar>
+                <Suspense fallback={<Spinner />}>
+                  <FloatButton />
+                </Suspense>
                 <Routes>
                   <Route
                     path="/"
@@ -124,6 +128,14 @@ function App() {
                     element={
                       <Suspense fallback={<Spinner />}>
                         <BudgetDescriptionList />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/detailedbudgetlist"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <DetailBudgetList />
                       </Suspense>
                     }
                   />

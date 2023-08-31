@@ -11,7 +11,12 @@ const detailsbudget = require("./routes/detailBudget.route");
 const path = require("path");
 const { exec } = require("child_process");
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:5173",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // Allows cookies and authentication headers
+};
+app.use(cors(corsOptions));
 app.use(helmet());
 // app.use(express.json());
 app.use(bodyParser.json());
