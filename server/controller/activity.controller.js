@@ -49,16 +49,18 @@ module.exports = {
           index: true,
         },
       });
-      const count = await prisma.Activity.findMany({
+
+      const count = await prisma.Activity.count({
         where: {
           outcomeId: outcome,
         },
       });
+
       const response = await prisma.Activity.create({
         data: {
           activityName: activityName,
           outcomeId: outcome,
-          index: parseFloat(index + "." + count + 1),
+          index: index + "." + JSON.stringify(count + 1),
           yearlyActivities: data,
         },
       });

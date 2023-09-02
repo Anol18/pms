@@ -84,7 +84,10 @@ const Page = () => {
     setDateWiseActivity(updatedList);
   };
   const handleSubmit = async (value) => {
-    const res = await addActivity({ value, dateWiseActivityCount });
+    await addActivity({ value, dateWiseActivityCount });
+    if (response) {
+      form.resetFields();
+    }
   };
   useEffect(() => {
     refetch();
@@ -198,7 +201,7 @@ const Page = () => {
                         key: i,
                         children: (
                           <>
-                            <Form.Item id={i} label="Total Activity">
+                            <Form.Item id={i} label="Total Activity" name="acc">
                               <Input
                                 placeholder="Total Activity"
                                 name={d?.year.toString()}
@@ -214,7 +217,9 @@ const Page = () => {
               </Row>
               <Row justify="end" gutter={16}>
                 <Col>
-                  <Button type="reset">Reset</Button>
+                  <Button htmlType="reset">Reset</Button>
+                </Col>
+                <Col>
                   <Button type="primary" htmlType="submit">
                     Submit
                   </Button>
