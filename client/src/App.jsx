@@ -13,17 +13,26 @@ const AddOutcome = lazy(() => import("./Pages/Outcome/add/Page"));
 const OutcomeList = lazy(() => import("./Pages/Outcome/list/Page"));
 const AddActivity = lazy(() => import("./Pages/Activity/Add/Page"));
 import Spinner from "./Components/Spinner/Page";
-const Program = lazy(() => import("./Pages/Activity/programs/list/Page"));
+// const Program = lazy(() => import("./Pages/Activity/programs/list/Page"));
 const AddEmployee = lazy(() => import("./Pages/Employee/add/page"));
 const AddBudget = lazy(() => import("./Pages/DetailBudget/Add/Page"));
 const AddPip = lazy(() => import("./Pages/PIP/add/Page"));
 const Dashboard = lazy(() => import("./Pages/Dashboard/Page"));
 const ActivityList = lazy(() => import("./Pages/Activity/List/page"));
-const BudgetDescriptionList = lazy(() =>
-  import("./Pages/BudgetDescription/List/Page")
-);
+const Particular = lazy(() => import("./Pages/Settings/Particulars/List/Page"));
 const DetailBudgetList = lazy(() => import("./Pages/DetailBudget/List/Page"));
 const FloatButton = lazy(() => import("./Components/FloatButton/Page"));
+// Settings
+const ActivityType = lazy(() =>
+  import("./Pages/Settings/Activity-type/List/Page")
+);
+const Designation = lazy(() =>
+  import("./Pages/Settings/Designation/List/Page")
+);
+const ObjectType = lazy(() => import("./Pages/Settings/Object-type/List/Page"));
+const DurationType = lazy(() =>
+  import("./Pages/Settings/Duration-type/List/Page")
+);
 function App() {
   return (
     <>
@@ -123,19 +132,53 @@ function App() {
                       </Suspense>
                     }
                   />
-                  <Route
-                    path="/budgetdescription"
-                    element={
-                      <Suspense fallback={<Spinner />}>
-                        <BudgetDescriptionList />
-                      </Suspense>
-                    }
-                  />
+
                   <Route
                     path="/detailedbudgetlist"
                     element={
                       <Suspense fallback={<Spinner />}>
                         <DetailBudgetList />
+                      </Suspense>
+                    }
+                  />
+                  {/* Settings Route */}
+                  <Route
+                    path="/activityType"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <ActivityType />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/objectType"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <ObjectType />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/designation"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <Designation />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/budgetdescription"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <Particular />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/durationType"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <DurationType />
                       </Suspense>
                     }
                   />

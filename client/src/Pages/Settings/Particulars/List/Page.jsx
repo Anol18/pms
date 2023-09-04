@@ -1,24 +1,10 @@
-import { Button, Col, Layout, Row, Space, Table } from "antd";
+import { Button, Col, Layout, Row, Space, Table, Tooltip } from "antd";
 const { Header, Content } = Layout;
 const { Column, ColumnGroup } = Table;
-
-import { Suspense, lazy } from "react";
+import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { Suspense, lazy, useEffect } from "react";
 import { Spin } from "antd";
-const AddBudgetDetails = lazy(() => import("../Add/Page.jsx"));
-// const colums = [
-//   {
-//     title: "#SL",
-//     dataIndex: "sl",
-//   },
-//   {
-//     title: "Particular",
-//     dataIndex: "particular",
-//   },
-//   {
-//     title: "Action",
-//   },
-// ];
-
+const AddParticular = lazy(() => import("../Add/Page"));
 const Page = () => {
   const data = [
     {
@@ -27,6 +13,9 @@ const Page = () => {
       particular: "test",
     },
   ];
+
+  function setDataToTable() {}
+  useEffect(() => {}, []);
   return (
     <>
       <Space style={{ width: "100%" }} direction="vertical">
@@ -38,7 +27,7 @@ const Page = () => {
             <Row justify="end" style={{ margin: "10px" }}>
               <Col>
                 <Suspense fallback={<Spin />}>
-                  <AddBudgetDetails />
+                  <AddParticular />
                 </Suspense>
               </Col>
             </Row>
@@ -56,9 +45,28 @@ const Page = () => {
                     key="action"
                     width={120}
                     render={(_, record) => (
-                      <Space>
-                        <a>Action</a>
-                      </Space>
+                      <span>
+                        <Row justify="space-around">
+                          <Col>
+                            <Tooltip title="Edit" color="gold">
+                              <EditOutlined className="action-icon" />
+                            </Tooltip>
+                          </Col>
+                          <Col>
+                            <Tooltip title="View" color="green">
+                              <EyeOutlined
+                                className="action-icon"
+                                onClick={() => dispatch(openDrawer(true))}
+                              />
+                            </Tooltip>
+                          </Col>
+                          <Col>
+                            <Tooltip title="Delete" color="red">
+                              <DeleteOutlined className="action-icon" />
+                            </Tooltip>
+                          </Col>
+                        </Row>
+                      </span>
                     )}
                   />
                 </Table>

@@ -1,4 +1,14 @@
-import { Card, Col, Layout, Row, Select, Space, Statistic, Table } from "antd";
+import {
+  Card,
+  Col,
+  Layout,
+  Row,
+  Select,
+  Space,
+  Statistic,
+  Table,
+  Tooltip,
+} from "antd";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowDownOutlined,
@@ -21,18 +31,41 @@ const Page = () => {
     {
       title: "#SL",
       dataIndex: "sl",
-      width: 20,
+      width: 40,
       align: "center",
     },
     {
       title: "Activities",
       dataIndex: "activityName",
       width: 500,
-      align: "center",
     },
     {
       title: "Action",
       width: 50,
+      render: () => (
+        <span>
+          <Row justify="space-around">
+            <Col>
+              <Tooltip title="Edit" color="gold">
+                <EditOutlined className="action-icon" />
+              </Tooltip>
+            </Col>
+            <Col>
+              <Tooltip title="View" color="green">
+                <EyeOutlined
+                  className="action-icon"
+                  // onClick={() => dispatch(openDrawer(true))}
+                />
+              </Tooltip>
+            </Col>
+            <Col>
+              <Tooltip title="Delete" color="red">
+                <DeleteOutlined className="action-icon" />
+              </Tooltip>
+            </Col>
+          </Row>
+        </span>
+      ),
     },
   ];
 
@@ -55,7 +88,7 @@ const Page = () => {
       setResult();
     }
   };
-  console.log(result);
+
   const handleOutcome = (value) => {
     let pushedData = [];
     if (value) {

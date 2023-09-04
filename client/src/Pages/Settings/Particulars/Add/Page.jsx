@@ -11,11 +11,11 @@ import {
   Space,
 } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import { useAddBudgetDescriptionMutation } from "../../../api/apiSlices/budgetDescription.api.slice";
+import { useAddparticularMutation } from "../../../../api/apiSlices/particular.api";
 const { Content } = Layout;
 const Page = () => {
   const [form] = Form.useForm();
-  const [addBudgetDescription, response] = useAddBudgetDescriptionMutation();
+  const [addparticular, response] = useAddparticularMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -27,7 +27,7 @@ const Page = () => {
     setIsModalOpen(false);
   };
   const onSubmit = async (value) => {
-    const res = await addBudgetDescription(value);
+    const res = await addparticular(value);
     console.log(response);
     form.resetFields();
     handleCancel();

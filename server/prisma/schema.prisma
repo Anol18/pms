@@ -9,7 +9,7 @@ datasource db{
 
 model Projects{
     id Int @id @default(autoincrement())
-    projectName String @db.VarChar(500)
+    projectName String @db.VarChar(600)
     projectDuration Json
     division Json
     district Json
@@ -57,7 +57,7 @@ model SubGrantPartners{
 model Outcome{
     id Int @id @default(autoincrement())
     index Int
-    outcomeName String
+    outcomeName String @db.VarChar(600)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     projects Projects @relation(fields: [projectID],references: [id])
@@ -67,7 +67,7 @@ model Outcome{
 model Activity{
     id Int @id @default(autoincrement())
     index String
-    activityName String
+    activityName String @db.VarChar(600)
     yearlyActivities Json
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

@@ -37,6 +37,7 @@ module.exports = {
   post: async (req, res) => {
     try {
       const { outcome, activityName } = req.body.value;
+
       const dataPromises = req.body.dateWiseActivityCount.map(async (item) => {
         return item.activityCount;
       });

@@ -183,7 +183,7 @@ const Page = () => {
     },
   ];
   const [tData, setTData] = useState(null);
-  console.log(data);
+
   let tableData = [];
   let sum = 0.0;
 
@@ -265,11 +265,7 @@ const Page = () => {
             <h4 style={{ textAlign: "center" }}>Projects List</h4>
           </Header>
           <Content className="container">
-            <Row
-              gutter={16}
-              style={{ userSelect: "none" }}
-              justify="space-around"
-            >
+            <Row gutter={16} justify="space-around">
               <Col lg={{ span: 4 }} xs={24}>
                 <Card bordered={false}>
                   <Statistic

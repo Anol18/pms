@@ -3,22 +3,19 @@ import {
   Col,
   Form,
   Input,
-  InputNumber,
   Layout,
   Row,
   Tabs,
   Select,
   Space,
-  Table,
-  Modal,
 } from "antd";
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
 
 import {
   useActivityListQuery,
   useAddActivityMutation,
 } from "../../../api/apiSlices/activity.api.slice";
+import { useNavigate } from "react-router-dom";
 const { Content, Header } = Layout;
 
 const Page = () => {
@@ -26,11 +23,10 @@ const Page = () => {
   const [loadOutcome, setLoadOutcome] = useState();
   const [dateRange, setDateRange] = useState();
   const [dateWiseActivityCount, setDateWiseActivity] = useState([]);
-  const { data, isLoading, error, isSuccess, refetch } = useActivityListQuery();
+  const { data, refetch } = useActivityListQuery();
   const [addActivity, response] = useAddActivityMutation();
+  const navigate = useNavigate();
   function generateYearSeries(startDate, endDate) {
-    // console.log(data);
-
     const startYear = startDate;
     const endYear = endDate;
 
@@ -44,12 +40,9 @@ const Page = () => {
     return yearSeries;
   }
 
-  // const yearSeries = generateYearSeries(startDate, endDate);
-
   const handleProjectSelection = (value) => {
     let outComeList = [];
     let date;
-    // console.log(value);
     for (let item of data) {
       if (parseInt(item.id) === value) {
         outComeList.push({
@@ -59,14 +52,20 @@ const Page = () => {
         break;
       }
     }
-
     setLoadOutcome(outComeList[0]?.outcome);
-    setDateRange(date);
+
+    const years = date?.map((dateString) => {
+      const dateParts = dateString.split("/");
+      const year = dateParts[2];
+      return year;
+    });
+
     if (date) {
       const rangeofdate = generateYearSeries(
-        dayjs(date[0], "DD/MM/YYYY").year(),
-        dayjs(date[1], "DD/MM/YYYY").year()
+        parseInt(years[0]),
+        parseInt(years[1])
       );
+      console.log("date range function", rangeofdate);
       setDateRange(rangeofdate);
     } else {
       setDateRange();
@@ -76,6 +75,7 @@ const Page = () => {
 
   const handleDateWiseActivity = (e, index) => {
     const { name, value } = e.target;
+
     const updatedList = [...dateWiseActivityCount];
     updatedList[index] = {
       ...updatedList[index],
@@ -86,7 +86,7 @@ const Page = () => {
   const handleSubmit = async (value) => {
     await addActivity({ value, dateWiseActivityCount });
     if (response) {
-      form.resetFields();
+      navigate("/activitylist");
     }
   };
   useEffect(() => {
@@ -201,10 +201,15 @@ const Page = () => {
                         key: i,
                         children: (
                           <>
-                            <Form.Item id={i} label="Total Activity" name="acc">
+                            <Form.Item id={i} label="Total Activity">
                               <Input
                                 placeholder="Total Activity"
                                 name={d?.year.toString()}
+                                // value={
+                                //   dateWiseActivityCount[i] &&
+                                //   dateWiseActivityCount[i].activityCount
+                                //     .activityCount
+                                // }
                                 onChange={(e) => handleDateWiseActivity(e, i)}
                               />
                             </Form.Item>

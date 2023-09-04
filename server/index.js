@@ -9,10 +9,13 @@ const budgetDescriptio = require("./routes/budgetDescription.route");
 const detailsbudget = require("./routes/detailBudget.route");
 
 const path = require("path");
-const { exec } = require("child_process");
+// const { exec } = require("child_process");
 const app = express();
 const corsOptions = {
+  // origin: "https://blfbd.net/",
   origin: "http://localhost:5173",
+  // origin: "http://127.0.0.1:5500",
+  // origin: "http://localhost:5173",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // Allows cookies and authentication headers
 };
@@ -31,10 +34,20 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // });
 
 // CMD Command variable
-// const npmCommand = "npx prisma migrate dev --name addNewModelBudgetDescription";
+// const createDatabase =
+//   "npx prisma migrate dev --name addNewModelBudgetDescription";
+// const createDatabaseClient = "npx prisma migrate dev";
 
 // Execution Function
-// exec(npmCommand, (error, stdout, stderr) => {
+// exec(createDatabase, (error, stdout, stderr) => {
+//   if (error) {
+//     console.error(`Error executing npm command: ${error}`);
+//     return;
+//   }
+
+//   console.log(`npm command output:\n${stdout}`);
+// });
+// exec(createDatabaseClient, (error, stdout, stderr) => {
 //   if (error) {
 //     console.error(`Error executing npm command: ${error}`);
 //     return;
@@ -48,7 +61,6 @@ app.use("/api", outcomeRoute);
 app.use("/api", activityRoute);
 app.use("/api", budgetDescriptio);
 app.use("/api", detailsbudget);
-
-app.listen(5000, () => {
+app.listen(process.env.PORT, () => {
   console.log("server started");
 });
