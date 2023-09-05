@@ -62,7 +62,7 @@ const items = [
   getItem("Settings", "sub6", <SettingFilled />, [
     getItem("Designation", "/designation"),
     getItem("Office Branch", "/branch"),
-    getItem("Particulars", "/budgetdescription"),
+    getItem("Particulars", "/particular"),
     getItem("Object Type", "/objectType"),
     getItem("Activity Type", "/activityType"),
     getItem("Duration Type", "/durationType"),

@@ -2,20 +2,29 @@ import { Button, Col, Layout, Row, Space, Table, Tooltip } from "antd";
 const { Header, Content } = Layout;
 const { Column, ColumnGroup } = Table;
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { Suspense, lazy, useEffect } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Spin } from "antd";
+import { useParticularListQuery } from "../../../../api/apiSlices/particular.api";
 const AddParticular = lazy(() => import("../Add/Page"));
 const Page = () => {
-  const data = [
-    {
-      key: 1,
-      sl: 1,
-      particular: "test",
-    },
-  ];
+  const { data: particular, isSuccess } = useParticularListQuery();
+  const [tableData, setTableData] = useState();
 
-  function setDataToTable() {}
-  useEffect(() => {}, []);
+  function setDataToTable() {
+    const data = [];
+    particular?.map((item, i) => {
+      data.push({
+        key: i,
+        sl: i + 1,
+        particular: item.particular,
+        tax: item.tax,
+      });
+    });
+    setTableData(data);
+  }
+  useEffect(() => {
+    setDataToTable();
+  }, [isSuccess, particular.length]);
   return (
     <>
       <Space style={{ width: "100%" }} direction="vertical">
@@ -33,13 +42,14 @@ const Page = () => {
             </Row>
             <Row style={{ margin: "10px" }}>
               <Col lg={{ span: 24 }} xs={24}>
-                <Table bordered dataSource={data}>
+                <Table bordered dataSource={tableData}>
                   <Column title="#SL" dataIndex="sl" key="sl" width={10} />
                   <Column
                     title="Particular"
                     dataIndex="particular"
                     key="particular"
                   />
+                  <Column title="TAX %" dataIndex="tax" key="tax" />
                   <Column
                     title="Action"
                     key="action"
@@ -56,7 +66,7 @@ const Page = () => {
                             <Tooltip title="View" color="green">
                               <EyeOutlined
                                 className="action-icon"
-                                onClick={() => dispatch(openDrawer(true))}
+                                // onClick={() => dispatch(openDrawer(true))}
                               />
                             </Tooltip>
                           </Col>

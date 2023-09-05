@@ -27,8 +27,7 @@ const Page = () => {
     setIsModalOpen(false);
   };
   const onSubmit = async (value) => {
-    const res = await addparticular(value);
-    console.log(response);
+    await addparticular(value);
     form.resetFields();
     handleCancel();
   };

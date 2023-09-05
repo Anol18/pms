@@ -167,7 +167,7 @@ function App() {
                     }
                   />
                   <Route
-                    path="/budgetdescription"
+                    path="/particular"
                     element={
                       <Suspense fallback={<Spinner />}>
                         <Particular />

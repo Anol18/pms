@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const projectRoute = require("./routes/projectsRoute");
 const outcomeRoute = require("./routes/outcome.route");
 const activityRoute = require("./routes/activity.route");
-const budgetDescriptio = require("./routes/budgetDescription.route");
+const particularRoute = require("./routes/particular.route");
 const detailsbudget = require("./routes/detailBudget.route");
 
 const path = require("path");
@@ -59,7 +59,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api", projectRoute);
 app.use("/api", outcomeRoute);
 app.use("/api", activityRoute);
-app.use("/api", budgetDescriptio);
+app.use("/api", particularRoute);
 app.use("/api", detailsbudget);
 app.listen(process.env.PORT, () => {
   console.log("server started");
