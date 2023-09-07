@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Button,
+  Checkbox,
   Col,
   Form,
   Input,
@@ -17,6 +18,7 @@ const Page = () => {
   const [form] = Form.useForm();
   const [addparticular, response] = useAddparticularMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAc, setIsAc] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -27,10 +29,14 @@ const Page = () => {
     setIsModalOpen(false);
   };
   const onSubmit = async (value) => {
-    await addparticular(value);
-    form.resetFields();
+    await addparticular({ value, isAc });
     handleCancel();
+    form.resetFields();
+    setIsAc(false);
   };
+  function handleAc(e) {
+    setIsAc(e.target.checked);
+  }
   return (
     <>
       <Button
@@ -54,8 +60,8 @@ const Page = () => {
               <Row>
                 <Col lg={{ span: 24 }} xs={24}>
                   <Form layout="vertical" onFinish={onSubmit} form={form}>
-                    <Row gutter={16}>
-                      <Col lg={{ span: 12 }} xs={24}>
+                    <Row gutter={16} justify="space-between">
+                      <Col lg={{ span: 6 }} xs={24}>
                         <Form.Item
                           label="Particular"
                           required
@@ -70,7 +76,7 @@ const Page = () => {
                           <Input placeholder="Particular" />
                         </Form.Item>
                       </Col>
-                      <Col lg={{ span: 12 }} xs={24}>
+                      <Col lg={{ span: 6 }} xs={24}>
                         <Form.Item
                           label="TAX"
                           required
@@ -83,10 +89,39 @@ const Page = () => {
                           ]}
                           tooltip="TAX rate is base on particular"
                         >
-                          <InputNumber addonAfter="%" placeholder="TAX" />
+                          <InputNumber
+                            addonAfter="%"
+                            placeholder="TAX"
+                            className="w-full"
+                          />
                         </Form.Item>
                       </Col>
+                      <Col lg={{ span: 3 }} xs={24}>
+                        <Form.Item label name="isAc">
+                          <Checkbox className="w-full" onChange={handleAc}>
+                            AC
+                          </Checkbox>
+                        </Form.Item>
+                      </Col>
+                      <Col lg={{ span: 6 }} xs={24}>
+                        {isAc && (
+                          <Form.Item
+                            label="AC TAX"
+                            name="acTax"
+                            required
+                            rules={[
+                              {
+                                required: true,
+                                message: "AC TAX is required",
+                              },
+                            ]}
+                          >
+                            <InputNumber placeholder="AC TAX" />
+                          </Form.Item>
+                        )}
+                      </Col>
                     </Row>
+
                     <Row gutter={10} justify="end">
                       <Col>
                         <Button htmlType="reset">Reset</Button>

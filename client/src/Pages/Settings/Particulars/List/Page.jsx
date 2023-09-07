@@ -1,11 +1,17 @@
 import { Button, Col, Layout, Row, Space, Table, Tooltip } from "antd";
 const { Header, Content } = Layout;
 const { Column, ColumnGroup } = Table;
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { Spin } from "antd";
 import { useParticularListQuery } from "../../../../api/apiSlices/particular.api";
-const AddParticular = lazy(() => import("../Add/Page"));
+import AddParticular from "../Add/Page";
 const Page = () => {
   const { data: particular, isSuccess } = useParticularListQuery();
   const [tableData, setTableData] = useState();
@@ -18,13 +24,19 @@ const Page = () => {
         sl: i + 1,
         particular: item.particular,
         tax: item.tax,
+        isAc: item.isAc ? (
+          <CheckOutlined style={{ color: "green" }} />
+        ) : (
+          <CloseOutlined style={{ color: "red" }} />
+        ),
+        totalTax: item.totalTax,
       });
     });
     setTableData(data);
   }
   useEffect(() => {
     setDataToTable();
-  }, [isSuccess, particular.length]);
+  }, [isSuccess, particular?.length]);
   return (
     <>
       <Space style={{ width: "100%" }} direction="vertical">
@@ -33,23 +45,41 @@ const Page = () => {
             <h4>Budget Description</h4>
           </Header>
           <Content>
-            <Row justify="end" style={{ margin: "10px" }}>
+            <Row justify="end" style={{ margin: 10 }}>
               <Col>
-                <Suspense fallback={<Spin />}>
-                  <AddParticular />
-                </Suspense>
+                <AddParticular />
               </Col>
             </Row>
             <Row style={{ margin: "10px" }}>
               <Col lg={{ span: 24 }} xs={24}>
-                <Table bordered dataSource={tableData}>
-                  <Column title="#SL" dataIndex="sl" key="sl" width={10} />
+                <Table
+                  bordered
+                  dataSource={tableData}
+                  size="small"
+                  scroll={{
+                    y: 400,
+                    x: 1000,
+                  }}
+                >
+                  <Column
+                    title="#SL"
+                    dataIndex="sl"
+                    key="sl"
+                    width={60}
+                    align="center"
+                  />
                   <Column
                     title="Particular"
                     dataIndex="particular"
                     key="particular"
                   />
                   <Column title="TAX %" dataIndex="tax" key="tax" />
+                  <Column title="AC" dataIndex="isAc" key="ac" />
+                  <Column
+                    title="Total Tax %"
+                    dataIndex="totalTax"
+                    key="totalTax"
+                  />
                   <Column
                     title="Action"
                     key="action"

@@ -8,6 +8,8 @@ import { ActivityApi } from "./api/apiSlices/activity.api.slice";
 
 import { detailBudgetApi } from "./api/apiSlices/detailBudget.api.slice";
 import { particular } from "./api/apiSlices/particular.api";
+import { objectTypeApi } from "./api/apiSlices/objectType.slice";
+import { activityTypeApi } from "./api/apiSlices/activityType.slice";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +18,8 @@ const store = configureStore({
     [ActivityApi.reducerPath]: ActivityApi.reducer,
     [particular.reducerPath]: particular.reducer,
     [detailBudgetApi.reducerPath]: detailBudgetApi.reducer,
+    [objectTypeApi.reducerPath]: objectTypeApi.reducer,
+    [activityTypeApi.reducerPath]: activityTypeApi.reducer,
     // redux Slice
     projectSlice: projectSlice,
   },
@@ -25,6 +29,8 @@ const store = configureStore({
       .concat(OutcomeApi.middleware)
       .concat(ActivityApi.middleware)
       .concat(particular.middleware)
+      .concat(objectTypeApi.middleware)
+      .concat(activityTypeApi.middleware)
       .concat(detailBudgetApi.middleware),
 });
 // setupListeners(store.dispatch);

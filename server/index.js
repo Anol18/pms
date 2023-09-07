@@ -7,8 +7,9 @@ const outcomeRoute = require("./routes/outcome.route");
 const activityRoute = require("./routes/activity.route");
 const particularRoute = require("./routes/particular.route");
 const detailsbudget = require("./routes/detailBudget.route");
+const objectTypeRoute = require("./routes/objectType.route");
+const activityType = require("./routes/activityType.route");
 
-const path = require("path");
 // const { exec } = require("child_process");
 const app = express();
 const corsOptions = {
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // const now = new Date();
 // const timeZoneOffset = 360;
 // now.setMinutes(now.getMinutes() + timeZoneOffset);
+app.use(express.static("../client"));
 
 // Routes
 // app.get("*", (req, res) => {
@@ -61,6 +63,10 @@ app.use("/api", outcomeRoute);
 app.use("/api", activityRoute);
 app.use("/api", particularRoute);
 app.use("/api", detailsbudget);
+app.use("/api", objectTypeRoute);
+app.use("/api", activityType);
+
+// server start
 app.listen(process.env.PORT, () => {
   console.log("server started");
 });

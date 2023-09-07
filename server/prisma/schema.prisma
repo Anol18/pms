@@ -137,6 +137,30 @@ model Particular{
     id Int @id @default(autoincrement())
     particular String
     tax Float
+    isAc Boolean
+    acTax Float?
+    totalTax Float
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model ObjectType{
+    id Int @id @default(autoincrement())
+    objectType String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+model ActivityType{
+    id Int @id @default(autoincrement())
+    activityType String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+
+model Designation{
+    id Int @id @default(autoincrement())
+    designation String
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

@@ -19,22 +19,28 @@ import {
   useAddDetailBudgetMutation,
   useDetailBudgetListQuery,
 } from "../../../api/apiSlices/detailBudget.api.slice";
-import { useBudgetDescriptionListQuery } from "../../../api/apiSlices/budgetDescription.api.slice";
+import { useParticularListQuery } from "../../../api/apiSlices/particular.api";
+import { useObjectTypeListQuery } from "../../../api/apiSlices/objectType.slice";
+import { useActivityTypeListQuery } from "../../../api/apiSlices/activityType.slice";
 
 // const dataSocurce = [{ index: 1 }];
 const Page = () => {
   const { data, isLoading, isSuccess, error } = useDetailBudgetListQuery();
   const { data: particular, isSuccess: particularSuccess } =
-    useBudgetDescriptionListQuery();
+    useParticularListQuery();
+  const { data: objectType } = useObjectTypeListQuery();
+  const { data: activityType } = useActivityTypeListQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addDetailBudget] = useAddDetailBudgetMutation();
 
   const [result, setResult] = useState();
   const ref = useRef();
-
+  const [preDefinedTax, setPreDefinedTax] = useState(0);
   const [outcomeResult, setOutcomeResult] = useState();
   const [tax, setTax] = useState(0);
   const [budgetValues, setBudgetValues] = useState();
+  const [totalGrossValue, setTotalGrossValue] = useState(0);
+  const [calGRoss, setCalGross] = useState(0);
   const [netTotal, setNetTotal] = useState(0);
 
   const [addRow, setAddRow] = useState([
@@ -94,6 +100,40 @@ const Page = () => {
   let showData = [];
 
   const handleActivityTable = (index, field, value) => {
+    // if (field === "particular") {
+    //   particular.map((i) => {
+    //     if (i.particular === value) {
+    //       setPreDefinedTax(i.totalTax);
+    //     }
+    //   });
+    // }
+    // const updatedRows = addRow.map((row) => {
+    //   if (row.index === index) {
+    //     return { ...row, [field]: value };
+    //   }
+    //   return row;
+    // });
+    // setAddRow(updatedRows);
+    // const updatedRowsWithTax = updatedRows.map((row) => {
+    //   const { costPerUnit, quantity, desUnit, unit, vat, tax } = row;
+    //   const gross = costPerUnit * quantity * desUnit * unit;
+    //   let net = gross + (gross * (vat / 100.0) + gross * (tax / 100));
+
+    //   // setNetTotal((prev) => parseInt(prev) + parseInt(net));
+
+    //   return { ...row, gross, net };
+    // });
+    // setAddRow(updatedRowsWithTax);
+    if (field === "particular") {
+      particular.map((i) => {
+        if (i.particular === value) {
+          // Set the tax value for the specific row
+          addRow[index].tax = i.totalTax;
+          // setPreDefinedTax(i.totalTax);
+        }
+      });
+    }
+
     const updatedRows = addRow.map((row) => {
       if (row.index === index) {
         return { ...row, [field]: value };
@@ -101,13 +141,12 @@ const Page = () => {
       return row;
     });
     setAddRow(updatedRows);
+
     const updatedRowsWithTax = updatedRows.map((row) => {
       const { costPerUnit, quantity, desUnit, unit, vat, tax } = row;
       const gross = costPerUnit * quantity * desUnit * unit;
+      setCalGross(gross);
       let net = gross + (gross * (vat / 100.0) + gross * (tax / 100));
-
-      // setNetTotal((prev) => parseInt(prev) + parseInt(net));
-
       return { ...row, gross, net };
     });
     setAddRow(updatedRowsWithTax);
@@ -115,6 +154,7 @@ const Page = () => {
   const handleCalucation = () => {
     const updatedNetTotal = addRow.reduce((total, row) => {
       const { gross, vat, tax } = row;
+      setTotalGrossValue((prev) => prev + calGRoss);
       const net = gross + (gross * (vat / 100) + gross * (tax / 100));
       return total + net;
     }, 0);
@@ -191,7 +231,13 @@ const Page = () => {
           }
           name="perUnitDescription"
         >
-          <Select.Option value="2"> sad</Select.Option>
+          {objectType?.map((item) => {
+            return (
+              <Select.Option key={item.id} value={item.objectType}>
+                {item.objectType}
+              </Select.Option>
+            );
+          })}
         </Select>
       ),
       width: "10%",
@@ -223,7 +269,13 @@ const Page = () => {
           }
           name="description"
         >
-          <Select.Option value="2">sdf</Select.Option>
+          {activityType?.map((item) => {
+            return (
+              <Select.Option key={item.id} value={item.activityType}>
+                {item.activityType}
+              </Select.Option>
+            );
+          })}
         </Select>
       ),
       width: "8%",
@@ -292,22 +344,24 @@ const Page = () => {
       align: "center",
     },
 
-    {
-      title: "TAX",
-      render: (index, field, value) => (
-        <InputNumber
-          name="tax"
-          onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "tax", value)
-          }
-          style={{ width: "100%" }}
-          // disabled
-          // value={tax}
-        />
-      ),
-      with: "10%",
-      align: "center",
-    },
+    // {
+    //   title: "TAX",
+    //   render: (index, field, value) => (
+    //     <InputNumber
+    //       name="tax"
+    //       // value={preDefinedTax}
+    //       // disabled
+    //       onChange={(value) =>
+    //         handleActivityTable(addRow.length - 1, "tax", value)
+    //       }
+    //       style={{ width: "100%" }}
+    //       // disabled
+    //       // value={tax}
+    //     />
+    //   ),
+    //   with: "10%",
+    //   align: "center",
+    // },
     {
       title: "VAT",
       render: (index, field, value) => (
@@ -519,12 +573,50 @@ const Page = () => {
                   />
                 </Col>
               </Row>
-              <Row className="total-budget-section" justify="space-between">
+              <Row className="total-budget-section" justify="end">
                 <Col>
-                  <b>Total:</b>{" "}
-                </Col>
-                <Col>
-                  <b>{netTotal} BDT</b>
+                  <Row>
+                    <Col>
+                      <b>
+                        Gross Total:
+                        <input
+                          value={totalGrossValue}
+                          type="text"
+                          readOnly
+                          style={{
+                            outline: "none",
+                            border: "none",
+                            textAlign: "end",
+                            marginRight: "5px",
+                            marginLeft: "5px",
+                            color: "green",
+                          }}
+                        />
+                        BDT
+                      </b>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <b>
+                        Net Total:
+                        <input
+                          type="text"
+                          readOnly
+                          value={netTotal}
+                          style={{
+                            outline: "none",
+                            border: "none",
+                            textAlign: "end",
+                            marginRight: "5px",
+                            marginLeft: "17px",
+                            color: "green",
+                          }}
+                        />
+                        BDT
+                      </b>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
               <Row style={{ marginTop: "30px" }}>

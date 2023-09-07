@@ -17,10 +17,29 @@ module.exports = {
 
   post: async (req, res) => {
     try {
+      let { tax, acTax } = req.body.value;
+      if (!acTax) {
+        acTax = 0;
+      }
+
+      const totalTax = tax + acTax;
+      const { isAc } = req.body;
+      let name;
+      if (isAc) {
+        name = req.body.value.particular + " " + "(AC)";
+      } else {
+        name = req.body.value.particular;
+      }
       const response = await prisma.Particular.create({
-        data: req.body,
+        data: {
+          particular: name,
+          totalTax: totalTax,
+          isAc: isAc,
+          tax: req.body.value.tax,
+          acTax: req.body.value.acTax,
+        },
       });
-      res.status(201).send(response);
+      res.status(201).send("response");
     } catch (error) {
       console.log(error);
       res.status(500).send("Server error");
