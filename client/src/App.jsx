@@ -33,6 +33,7 @@ const ObjectType = lazy(() => import("./Pages/Settings/Object-type/List/Page"));
 const DurationType = lazy(() =>
   import("./Pages/Settings/Duration-type/List/Page")
 );
+const VatList = lazy(() => import("./Pages/Settings/Vat/List/Page"));
 function App() {
   return (
     <>
@@ -179,6 +180,14 @@ function App() {
                     element={
                       <Suspense fallback={<Spinner />}>
                         <DurationType />
+                      </Suspense>
+                    }
+                  />
+                  <Route
+                    path="/vat"
+                    element={
+                      <Suspense fallback={<Spinner />}>
+                        <VatList />
                       </Suspense>
                     }
                   />

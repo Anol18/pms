@@ -74,33 +74,36 @@ model Activity{
     outcome Outcome @relation(fields: [outcomeId],references: [id])
     outcomeId Int
     DetailBudget DetailBudget[]
+    ActivityTotal ActivityTotal[]
 }
 model DetailBudget{
         id Int @id @default(autoincrement())
         particular String
         costPerUnit Int
-        quantity Int
-        perUnitDescription String
-        unit Int
-        description String
-        unit2 Int
-        description2 String
-        grossTotal Float
+        objectUnit Int
+        objectType String
+        activityUnit Int
+        activityType String
+        durationUnit Int
+        durationType String
+        gross Float
         tax Float
         vat Float
-        netTotal Float
+        net Float
         createdAt DateTime @default(now())
         updatedAt DateTime @updatedAt
         activity Activity @relation(fields: [activityId],references: [id])
         activityId Int
-        ActivityTotal ActivityTotal[]
+       
 }
 model ActivityTotal{
     id Int @id @default(autoincrement())
     grossTotal Float
     netTotal Float
-    detailBudget DetailBudget @relation(fields: [detailBudgetId],references: [id])
-    detailBudgetId Int
+    activityId Int
+    activity Activity @relation(fields: [activityId],references: [id])
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Employee{
@@ -161,6 +164,12 @@ model ActivityType{
 model Designation{
     id Int @id @default(autoincrement())
     designation String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+model Vat{
+    id Int @id @default(autoincrement())
+    vat Float
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

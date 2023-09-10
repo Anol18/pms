@@ -4,7 +4,6 @@ import {
   Row,
   Col,
   Select,
-  Input,
   Table,
   Modal,
   InputNumber,
@@ -14,7 +13,7 @@ import {
 import { PlusCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
 const { Content, Header } = Layout;
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
   useAddDetailBudgetMutation,
   useDetailBudgetListQuery,
@@ -22,6 +21,8 @@ import {
 import { useParticularListQuery } from "../../../api/apiSlices/particular.api";
 import { useObjectTypeListQuery } from "../../../api/apiSlices/objectType.slice";
 import { useActivityTypeListQuery } from "../../../api/apiSlices/activityType.slice";
+import { useVatListQuery } from "../../../api/apiSlices/vat.slice";
+import { useNavigate } from "react-router-dom";
 
 // const dataSocurce = [{ index: 1 }];
 const Page = () => {
@@ -32,32 +33,28 @@ const Page = () => {
   const { data: activityType } = useActivityTypeListQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addDetailBudget] = useAddDetailBudgetMutation();
-
+  const { data: vat, isSuccess: vatSuccess } = useVatListQuery();
   const [result, setResult] = useState();
-  const ref = useRef();
-  const [preDefinedTax, setPreDefinedTax] = useState(0);
   const [outcomeResult, setOutcomeResult] = useState();
-  const [tax, setTax] = useState(0);
-  const [budgetValues, setBudgetValues] = useState();
-  const [totalGrossValue, setTotalGrossValue] = useState(0);
+  // const [totalGrossValue, setTotalGrossValue] = useState(0);
   const [calGRoss, setCalGross] = useState(0);
   const [netTotal, setNetTotal] = useState(0);
-
+  const navigate = useNavigate();
   const [addRow, setAddRow] = useState([
     {
       key: 0,
       index: 0,
+      sl: 1,
       particular: "",
       costPerUnit: "",
-      quantity: "",
-      perUnitDescription: "",
-      unit: "",
-      description: "",
-      desUnit: "",
-      description2: "",
-      gross: "",
+      objectUnit: "",
+      objectType: "",
+      activityUnit: "",
+      activityType: "",
+      durationUnit: "",
+      durationType: "",
+      gross: 0,
       tax: 0,
-      vat: 0,
       net: 0,
     },
   ]);
@@ -74,56 +71,34 @@ const Page = () => {
     const newRow = {
       key: addRow.length + 1,
       index: addRow.length,
+      sl: addRow.length + 1,
       particular: "",
       costPerUnit: "",
-      quantity: "",
-      perUnitDescription: "",
-      unit: "",
-      description: "",
-      desUnit: "",
-      description2: "",
+      objectUnit: "",
+      objectType: "",
+      activityUnit: "",
+      activityType: "",
+      durationUnit: "",
+      durationType: "",
       gross: 0,
       tax: 0,
-      vat: 0,
       net: 0,
     };
     setAddRow([...addRow, newRow]);
     const updatedNetTotal = addRow.reduce((total, row) => {
-      const { gross, vat, tax } = row;
-      const net = gross + (gross * (vat / 100) + gross * (tax / 100));
+      const { gross, tax } = row;
+      const net = gross + (gross * (vat[0]?.vat / 100) + gross * (tax / 100));
+
       return total + net;
     }, 0);
 
     setNetTotal(updatedNetTotal);
+
     handleOk();
   };
   let showData = [];
 
   const handleActivityTable = (index, field, value) => {
-    // if (field === "particular") {
-    //   particular.map((i) => {
-    //     if (i.particular === value) {
-    //       setPreDefinedTax(i.totalTax);
-    //     }
-    //   });
-    // }
-    // const updatedRows = addRow.map((row) => {
-    //   if (row.index === index) {
-    //     return { ...row, [field]: value };
-    //   }
-    //   return row;
-    // });
-    // setAddRow(updatedRows);
-    // const updatedRowsWithTax = updatedRows.map((row) => {
-    //   const { costPerUnit, quantity, desUnit, unit, vat, tax } = row;
-    //   const gross = costPerUnit * quantity * desUnit * unit;
-    //   let net = gross + (gross * (vat / 100.0) + gross * (tax / 100));
-
-    //   // setNetTotal((prev) => parseInt(prev) + parseInt(net));
-
-    //   return { ...row, gross, net };
-    // });
-    // setAddRow(updatedRowsWithTax);
     if (field === "particular") {
       particular.map((i) => {
         if (i.particular === value) {
@@ -143,33 +118,35 @@ const Page = () => {
     setAddRow(updatedRows);
 
     const updatedRowsWithTax = updatedRows.map((row) => {
-      const { costPerUnit, quantity, desUnit, unit, vat, tax } = row;
-      const gross = costPerUnit * quantity * desUnit * unit;
-      setCalGross(gross);
-      let net = gross + (gross * (vat / 100.0) + gross * (tax / 100));
+      const { costPerUnit, objectUnit, activityUnit, durationUnit, tax } = row;
+      const gross = costPerUnit * objectUnit * activityUnit * durationUnit;
+
+      let net = gross + (gross * (vat[0]?.vat / 100.0) + gross * (tax / 100));
       return { ...row, gross, net };
     });
     setAddRow(updatedRowsWithTax);
-  };
-  const handleCalucation = () => {
+    //
     const updatedNetTotal = addRow.reduce((total, row) => {
-      const { gross, vat, tax } = row;
-      setTotalGrossValue((prev) => prev + calGRoss);
-      const net = gross + (gross * (vat / 100) + gross * (tax / 100));
+      const { gross, tax } = row;
+      const net = gross + (gross * (vat[0]?.vat / 100) + gross * (tax / 100));
       return total + net;
     }, 0);
-
+    const updatedGrossTotal = addRow.reduce((total, row) => {
+      const { gross } = row;
+      return total + gross;
+    }, 0);
     setNetTotal(updatedNetTotal);
+    setCalGross(updatedGrossTotal);
   };
   const columnName = [
     {
       title: "#SL",
       align: "center",
-      dataIndex: "index",
+      dataIndex: "sl",
     },
     {
       title: "Particular",
-      render: (text, record, index) => (
+      render: () => (
         <Select
           style={{ width: "100%" }}
           onChange={(value) =>
@@ -194,11 +171,12 @@ const Page = () => {
     },
     {
       title: "Cost Per Unit(BDT)",
-      render: (index, field, value) => (
+      render: () => (
         <InputNumber
           onChange={(value) =>
             handleActivityTable(addRow.length - 1, "costPerUnit", value)
           }
+          min={0}
           name="costPerUnit"
         />
       ),
@@ -207,13 +185,14 @@ const Page = () => {
     },
     {
       title: "Object Unit",
-      render: (index, field, value) => (
+      render: () => (
         <InputNumber
           style={{ width: "100%" }}
           onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "quantity", value)
+            handleActivityTable(addRow.length - 1, "objectUnit", value)
           }
-          name="quantity"
+          min={1}
+          name="objectUnit"
         />
       ),
       width: "6%",
@@ -221,15 +200,15 @@ const Page = () => {
     },
     {
       title: "Object Type",
-      render: (index, field, value) => (
+      render: () => (
         <Select
           style={{ width: "100%" }}
           allowClear
           showSearch
           onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "perUnitDescription", value)
+            handleActivityTable(addRow.length - 1, "objectType", value)
           }
-          name="perUnitDescription"
+          name="objectType"
         >
           {objectType?.map((item) => {
             return (
@@ -245,13 +224,14 @@ const Page = () => {
     },
     {
       title: "Activity Unit",
-      render: (index, field, value) => (
+      render: () => (
         <InputNumber
           style={{ width: "100%" }}
           onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "unit", value)
+            handleActivityTable(addRow.length - 1, "activityUnit", value)
           }
-          name="unit"
+          min={1}
+          name="activityUnit"
         />
       ),
       width: "6%",
@@ -259,15 +239,15 @@ const Page = () => {
     },
     {
       title: "Activity Type",
-      render: (index, field, value) => (
+      render: () => (
         <Select
           style={{ width: "100%" }}
           allowClear
           showSearch
           onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "description", value)
+            handleActivityTable(addRow.length - 1, "activityType", value)
           }
-          name="description"
+          name="activityType"
         >
           {activityType?.map((item) => {
             return (
@@ -283,13 +263,14 @@ const Page = () => {
     },
     {
       title: "Duration Unit",
-      render: (index, field, value) => (
+      render: () => (
         <InputNumber
           style={{ width: "100%" }}
           onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "desUnit", value)
+            handleActivityTable(-1 + addRow.length, "durationUnit", value)
           }
-          name="desUnit"
+          min={1}
+          name="durationUnit"
         />
       ),
       width: "6%",
@@ -297,15 +278,15 @@ const Page = () => {
     },
     {
       title: "Duration Type",
-      render: (index, field, value) => (
+      render: () => (
         <Select
           style={{ width: "100%" }}
           allowClear
           showSearch
           onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "description2", value)
+            handleActivityTable(addRow.length - 1, "durationType", value)
           }
-          name="durationUnit"
+          name="durationType"
         >
           <Select.Option value="Min/Mins" key={1}>
             Min/Mins
@@ -329,78 +310,19 @@ const Page = () => {
     },
     {
       title: "Gross Total",
-      render: (index, field, value) => (
-        <InputNumber
-          style={{ width: "100%" }}
-          // disabled
-          // value="1000"
-          onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "gross", value)
-          }
-          name="gross"
-        />
-      ),
-      with: "10%",
-      align: "center",
-    },
-
-    // {
-    //   title: "TAX",
-    //   render: (index, field, value) => (
-    //     <InputNumber
-    //       name="tax"
-    //       // value={preDefinedTax}
-    //       // disabled
-    //       onChange={(value) =>
-    //         handleActivityTable(addRow.length - 1, "tax", value)
-    //       }
-    //       style={{ width: "100%" }}
-    //       // disabled
-    //       // value={tax}
-    //     />
-    //   ),
-    //   with: "10%",
-    //   align: "center",
-    // },
-    {
-      title: "VAT",
-      render: (index, field, value) => (
-        <InputNumber
-          onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "vat", value)
-          }
-          style={{ width: "100%" }}
-          // disabled
-          // value="1000"
-          name="vat"
-        />
+      render: (_, record) => (
+        <InputNumber style={{ width: "100%" }} disabled value={record.gross} />
       ),
       with: "10%",
       align: "center",
     },
     {
       title: "Net Total",
-      render: (index, field, value) => (
-        <InputNumber
-          onChange={(value) =>
-            handleActivityTable(addRow.length - 1, "net", value)
-          }
-          style={{ width: "100%" }}
-          // disabled
-          // value="1000"
-          name="net"
-        />
+      render: (_, record) => (
+        <InputNumber style={{ width: "100%" }} disabled value={record.net} />
       ),
       with: "10%",
       align: "center",
-    },
-    {
-      title: "",
-      render: () => (
-        <>
-          <Button onClick={handleCalucation}>Add</Button>
-        </>
-      ),
     },
   ];
 
@@ -448,17 +370,19 @@ const Page = () => {
     showOutComeName = [];
   };
   const handleSubmit = async (e) => {
-    const res = await addDetailBudget({ e, addRow });
-    // console.log(e, addRow);
-    console.log(res);
+    const vatRes = vat[0]?.vat;
+    const res = await addDetailBudget({
+      e,
+      addRow,
+      vatRes,
+      netTotal,
+      calGRoss,
+    });
+    // console.log(res);
+    // if (res) {
+    //   navigate("/detailedbudgetlist");
+    // }
   };
-  // console.log(addRow);
-
-  // useEffect(() => {
-  //   addRow.map((item) => {
-  //     setNetTotal((prev) => parseInt(prev) + parseInt(item.net));
-  //   });
-  // }, [addRow]);
 
   return (
     <>
@@ -580,7 +504,7 @@ const Page = () => {
                       <b>
                         Gross Total:
                         <input
-                          value={totalGrossValue}
+                          value={calGRoss}
                           type="text"
                           readOnly
                           style={{

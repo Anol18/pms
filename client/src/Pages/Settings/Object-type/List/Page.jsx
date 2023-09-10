@@ -51,7 +51,7 @@ const Page = () => {
     isSuccess &&
       data?.map((item, i) => {
         tableData.push({
-          key: item.i,
+          key: i,
           id: item.id,
           sl: i + 1,
           objectName: item.objectType,

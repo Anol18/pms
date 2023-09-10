@@ -3,20 +3,24 @@ import { Col, Layout, Row, Space, Table, Tooltip } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 const { Content, Header } = Layout;
 import AddObject from "../Add/Page";
-import { useObjectTypeListQuery } from "../../../../api/apiSlices/objectType.slice";
+import { useVatListQuery } from "../../../../api/apiSlices/vat.slice";
+
 const columns = [
   {
     title: "#SL",
     width: 80,
+    key: "sl",
     dataIndex: "sl",
   },
   {
-    title: "Object Name",
+    title: "VAT %",
+    key: "vat",
     dataIndex: "objectName",
   },
   {
     title: "Actions",
     width: 150,
+    key: "action",
     render: () => (
       <span>
         <Row justify="space-around">
@@ -44,14 +48,15 @@ const columns = [
   },
 ];
 const Page = () => {
-  const { data, isSuccess } = useObjectTypeListQuery();
+  const { data, isSuccess } = useVatListQuery();
+  console.log("vat", data);
   const [updateTableData, setUpdateTableData] = useState([]);
   const assignDataToTable = () => {
     const tableData = [];
     isSuccess &&
       data?.map((item, i) => {
         tableData.push({
-          key: item.i,
+          key: i,
           id: item.id,
           sl: i + 1,
           objectName: item.objectType,

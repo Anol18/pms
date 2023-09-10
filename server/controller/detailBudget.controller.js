@@ -32,9 +32,44 @@ module.exports = {
   },
   post: async (req, res) => {
     try {
-      console.log(req.body);
-      res.send("");
-    } catch (error) {}
+      const allData = await Promise.all(
+        req.body.addRow.map(async (i) => {
+          return {
+            particular: i.particular,
+            costPerUnit: i.costPerUnit,
+            objectUnit: i.objectUnit,
+            objectType: i.objectType,
+            activityUnit: i.activityUnit,
+            activityType: i.activityType,
+            durationUnit: i.durationUnit,
+            durationType: i.durationType,
+            gross: i.gross,
+            tax: i.tax,
+            net: i.net,
+            vat: req.body.vatRes,
+            activityId: req.body.e.activity,
+          };
+        })
+      );
+      const budgetResponse = await prisma.DetailBudget.createMany({
+        data: allData,
+      });
+
+      const activityTotalResponse = await prisma.ActivityTotal.create({
+        data: {
+          netTotal: req.body.netTotal,
+          grossTotal: req.body.calGRoss,
+          activityId: req.body.e.activity,
+        },
+      });
+
+      res
+        .status(201)
+        .json({ Budget: budgetResponse, activity: activityTotalResponse });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Internal Server error");
+    }
   },
   delete: async (req, res) => {},
   put: async (req, res) => {},

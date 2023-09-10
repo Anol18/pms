@@ -9,25 +9,19 @@ const particularRoute = require("./routes/particular.route");
 const detailsbudget = require("./routes/detailBudget.route");
 const objectTypeRoute = require("./routes/objectType.route");
 const activityType = require("./routes/activityType.route");
-
+const vatRoute = require("./routes/vat.route");
 // const { exec } = require("child_process");
 const app = express();
 const corsOptions = {
-  // origin: "https://blfbd.net/",
-  origin: "http://localhost:5173",
-  // origin: "http://127.0.0.1:5500",
-  // origin: "http://localhost:5173",
+  origin: process.env.URL,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // Allows cookies and authentication headers
 };
 app.use(cors(corsOptions));
 app.use(helmet());
-// app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// const now = new Date();
-// const timeZoneOffset = 360;
-// now.setMinutes(now.getMinutes() + timeZoneOffset);
+
 app.use(express.static("../client"));
 
 // Routes
@@ -65,6 +59,7 @@ app.use("/api", particularRoute);
 app.use("/api", detailsbudget);
 app.use("/api", objectTypeRoute);
 app.use("/api", activityType);
+app.use("/api", vatRoute);
 
 // server start
 app.listen(process.env.PORT, () => {
