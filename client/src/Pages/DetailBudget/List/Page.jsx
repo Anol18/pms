@@ -2,12 +2,17 @@ import { useState } from "react";
 import { Card, Col, Layout, Row, Select, Space, Statistic, Table } from "antd";
 const { Content, Header } = Layout;
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
-import { useDetailBudgetListQuery } from "../../../api/apiSlices/detailBudget.api.slice";
+import {
+  useDetailBudgetListQuery,
+  useGetTotalDetailBudgetListQuery,
+} from "../../../api/apiSlices/detailBudget.api.slice";
 const Page = () => {
-  const { data, isLoading, isSuccess, error } = useDetailBudgetListQuery();
+  const { data: budgetList, isSuccess } = useGetTotalDetailBudgetListQuery();
+  const { data } = useDetailBudgetListQuery();
   const [result, setResult] = useState();
   const [outcomeResult, setOutcomeResult] = useState();
   const [activityId, setActivityId] = useState();
+  const [loadDataToTable, setLoadDataToTable] = useState([]);
   let showData = [];
   const OnChangeProject = (e) => {
     if (e) {
@@ -32,7 +37,6 @@ const Page = () => {
   };
 
   let showOutComeName = [];
-
   // form onChange handler
   const onChangeOutcome = (e) => {
     if (e) {
@@ -52,9 +56,87 @@ const Page = () => {
     }
     showOutComeName = [];
   };
-  const handleActivity = (e) => {
-    console.log(e);
+
+  const columns = [
+    {
+      title: "#SL",
+      dataIndex: "sl",
+    },
+    {
+      title: "Particuars",
+      dataIndex: "particular",
+    },
+    {
+      title: "Cost Per Unit (BDT)",
+      dataIndex: "costPerUnit",
+    },
+    {
+      title: "Object Unit",
+      dataIndex: "objectUnit",
+    },
+    {
+      title: "Object Type",
+      dataIndex: "objectType",
+    },
+    {
+      title: "Activity Unit",
+      dataIndex: "activityUnit",
+    },
+    {
+      title: "Activity Type",
+      dataIndex: "activityType",
+    },
+    {
+      title: "Duration Unit",
+      dataIndex: "durationUnit",
+    },
+    {
+      title: "Duration Type",
+      dataIndex: "durationType",
+    },
+    {
+      title: "Gross Total",
+      dataIndex: "gross",
+    },
+    {
+      title: "Net Total",
+      dataIndex: "net",
+    },
+    {
+      title: "TAX %",
+      dataIndex: "tax",
+    },
+    {
+      title: "VAT %",
+      dataIndex: "vat",
+    },
+  ];
+  const tableData = [];
+
+  const handleActivity = (id) => {
+    budgetList.map((i, index) => {
+      if (i.activityId === id) {
+        tableData.push({
+          key: index,
+          sl: index + 1,
+          particular: i.particular,
+          costPerUnit: i.costPerUnit,
+          objectUnit: i.objectUnit,
+          objectType: i.objectType,
+          activityUnit: i.activityUnit,
+          activityType: i.activityType,
+          durationUnit: i.durationUnit,
+          durationType: i.durationType,
+          gross: i.gross + " " + "BDT",
+          net: i.net + " " + "BDT",
+          tax: i.tax,
+          vat: i.vat,
+        });
+      }
+    });
+    setLoadDataToTable(tableData);
   };
+
   return (
     <>
       <Space className="w-full" size={[0, 48]} direction="vertical">
@@ -152,7 +234,7 @@ const Page = () => {
                   className="w-full"
                 >
                   {isSuccess &&
-                    data.map((i) => {
+                    data?.map((i) => {
                       return (
                         <Select.Option key={i.id} value={i.projectName}>
                           {i.projectName}
@@ -204,7 +286,11 @@ const Page = () => {
             </Row>
             <Row className="pt-20">
               <Col lg={{ span: 24 }}>
-                <Table />
+                <Table
+                  size="small"
+                  columns={columns}
+                  dataSource={loadDataToTable}
+                />
               </Col>
             </Row>
           </Content>

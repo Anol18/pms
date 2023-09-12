@@ -139,9 +139,8 @@ model Employee{
 model Particular{
     id Int @id @default(autoincrement())
     particular String
-    tax Float
+    vat Float
     isAc Boolean
-    acTax Float?
     totalTax Float
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -164,12 +163,6 @@ model ActivityType{
 model Designation{
     id Int @id @default(autoincrement())
     designation String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-model Vat{
-    id Int @id @default(autoincrement())
-    vat Float
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }

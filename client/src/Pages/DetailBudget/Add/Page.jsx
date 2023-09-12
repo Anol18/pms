@@ -10,7 +10,7 @@ import {
   Form,
   Button,
 } from "antd";
-import { PlusCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
+import { PlusCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
 const { Content, Header } = Layout;
 
 import { useState } from "react";
@@ -33,7 +33,7 @@ const Page = () => {
   const { data: activityType } = useActivityTypeListQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addDetailBudget] = useAddDetailBudgetMutation();
-  const { data: vat, isSuccess: vatSuccess } = useVatListQuery();
+  // const { data: vatData, isSuccess: vatSuccess } = useVatListQuery();
   const [result, setResult] = useState();
   const [outcomeResult, setOutcomeResult] = useState();
   // const [totalGrossValue, setTotalGrossValue] = useState(0);
@@ -55,6 +55,7 @@ const Page = () => {
       durationType: "",
       gross: 0,
       tax: 0,
+      vat: 0,
       net: 0,
     },
   ]);
@@ -82,12 +83,13 @@ const Page = () => {
       durationType: "",
       gross: 0,
       tax: 0,
+      vat: 0,
       net: 0,
     };
     setAddRow([...addRow, newRow]);
     const updatedNetTotal = addRow.reduce((total, row) => {
-      const { gross, tax } = row;
-      const net = gross + (gross * (vat[0]?.vat / 100) + gross * (tax / 100));
+      const { gross, tax, vat } = row;
+      const net = gross + (gross * (vat / 100) + gross * (tax / 100));
 
       return total + net;
     }, 0);
@@ -104,6 +106,7 @@ const Page = () => {
         if (i.particular === value) {
           // Set the tax value for the specific row
           addRow[index].tax = i.totalTax;
+          addRow[index].vat = i.vat;
           // setPreDefinedTax(i.totalTax);
         }
       });
@@ -116,19 +119,17 @@ const Page = () => {
       return row;
     });
     setAddRow(updatedRows);
-
     const updatedRowsWithTax = updatedRows.map((row) => {
-      const { costPerUnit, objectUnit, activityUnit, durationUnit, tax } = row;
+      const { costPerUnit, objectUnit, activityUnit, durationUnit, tax, vat } =
+        row;
       const gross = costPerUnit * objectUnit * activityUnit * durationUnit;
-
-      let net = gross + (gross * (vat[0]?.vat / 100.0) + gross * (tax / 100));
+      let net = gross + (gross * (vat / 100.0) + gross * (tax / 100));
       return { ...row, gross, net };
     });
     setAddRow(updatedRowsWithTax);
-    //
     const updatedNetTotal = addRow.reduce((total, row) => {
-      const { gross, tax } = row;
-      const net = gross + (gross * (vat[0]?.vat / 100) + gross * (tax / 100));
+      const { gross, tax, vat } = row;
+      const net = gross + (gross * (vat / 100) + gross * (tax / 100));
       return total + net;
     }, 0);
     const updatedGrossTotal = addRow.reduce((total, row) => {
@@ -138,7 +139,24 @@ const Page = () => {
     setNetTotal(updatedNetTotal);
     setCalGross(updatedGrossTotal);
   };
+  // console.log("vat", vatData);
   const columnName = [
+    {
+      render: () => (
+        <>
+          <Button
+            style={{
+              width: "100%",
+              border: "none",
+              // backgroundColor: "var(--green-button)",
+              // color: "var(--light)",
+            }}
+            icon={<PlusCircleOutlined style={{ color: "black" }} />}
+            onClick={showModal}
+          ></Button>
+        </>
+      ),
+    },
     {
       title: "#SL",
       align: "center",
@@ -308,6 +326,32 @@ const Page = () => {
       width: "8%",
       align: "center",
     },
+
+    // {
+    //   title: "VAT",
+    //   render: () => (
+    //     <Select
+    //       style={{ width: "100%" }}
+    //       allowClear
+    //       showSearch
+    //       onChange={(value) =>
+    //         handleActivityTable(addRow.length - 1, "vat", parseFloat(value))
+    //       }
+    //       name="vat"
+    //     >
+    //       {vatData?.map((item) => {
+    //         return (
+    //           <Select.Option key={item.id} value={item.vat}>
+    //             {item.vat}
+    //           </Select.Option>
+    //         );
+    //       })}
+    //     </Select>
+    //   ),
+    //   width: "8%",
+    //   align: "center",
+    // },
+
     {
       title: "Gross Total",
       render: (_, record) => (
@@ -370,18 +414,16 @@ const Page = () => {
     showOutComeName = [];
   };
   const handleSubmit = async (e) => {
-    const vatRes = vat[0]?.vat;
     const res = await addDetailBudget({
       e,
       addRow,
-      vatRes,
       netTotal,
       calGRoss,
     });
-    // console.log(res);
-    // if (res) {
-    //   navigate("/detailedbudgetlist");
-    // }
+
+    if (res) {
+      navigate("/detailedbudgetlist");
+    }
   };
 
   return (
@@ -543,21 +585,7 @@ const Page = () => {
                   </Row>
                 </Col>
               </Row>
-              <Row style={{ marginTop: "30px" }}>
-                <Col lg={{ span: 24 }}>
-                  <Button
-                    style={{
-                      width: "100%",
-                      backgroundColor: "var(--green-button)",
-                      color: "var(--light)",
-                    }}
-                    icon={<PlusCircleFilled />}
-                    onClick={showModal}
-                  >
-                    Add New
-                  </Button>
-                </Col>
-              </Row>
+
               <Row gutter={16} style={{ marginTop: "20px" }} justify="end">
                 <Col>
                   <Button>Reset</Button>

@@ -40,6 +40,11 @@ const Page = () => {
       width: 500,
     },
     {
+      title: "Yearly Activities",
+      dataIndex: "yearlyactivities",
+      width: 500,
+    },
+    {
       title: "Action",
       width: 50,
       render: () => (
@@ -99,6 +104,7 @@ const Page = () => {
               pushedData.push({
                 sl: item.index,
                 activityName: item.activityName,
+                yearlyactivities: item.yearlyActivities,
               });
             });
 

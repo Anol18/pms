@@ -54,7 +54,9 @@ const items = [
     getItem("Budget List", "/detailedbudgetlist"),
   ]),
 
-  getItem("PIP", "sub4", <SnippetsFilled />, [getItem("Generate PIP", "/pip")]),
+  getItem("PIP", "sub4", <SnippetsFilled />, [
+    getItem("Activity Wise PIP", "/activitywisepip"),
+  ]),
   getItem("Employee", "sub5", <TeamOutlined />, [
     getItem("Add Employee", "/addemployee"),
     getItem("Employee List", "/union/union-list"),
@@ -65,7 +67,7 @@ const items = [
     getItem("Particulars", "/particular"),
     getItem("Object Type", "/objectType"),
     getItem("Activity Type", "/activityType"),
-    getItem("Duration Type", "/durationType"),
+    // getItem("Duration Type", "/durationType"),
     getItem("VAT", "/vat"),
 
     // getItem("Notifications Settings", "/notifications"),

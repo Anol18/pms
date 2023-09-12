@@ -23,7 +23,7 @@ const Page = () => {
         key: i,
         sl: i + 1,
         particular: item.particular,
-        tax: item.tax,
+        vat: item.vat,
         isAc: item.isAc ? (
           <CheckOutlined style={{ color: "green" }} />
         ) : (
@@ -73,13 +73,10 @@ const Page = () => {
                     dataIndex="particular"
                     key="particular"
                   />
-                  <Column title="TAX %" dataIndex="tax" key="tax" />
+                  <Column title="VAT %" dataIndex="vat" key="vat" />
+
                   <Column title="AC" dataIndex="isAc" key="ac" />
-                  <Column
-                    title="Total Tax %"
-                    dataIndex="totalTax"
-                    key="totalTax"
-                  />
+                  <Column title="TAX %" dataIndex="totalTax" key="totalTax" />
                   <Column
                     title="Action"
                     key="action"

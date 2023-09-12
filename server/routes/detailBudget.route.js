@@ -5,5 +5,6 @@ route.get("/detailsbudget", controller.get);
 route.post("/detailsbudget", controller.post);
 route.delete("/detailsbudget/:id", controller.delete);
 route.put("/detailsbudget/:id", controller.put);
+route.get("/totaldetailsbudget", controller.getDetailBudget);
 
 module.exports = route;

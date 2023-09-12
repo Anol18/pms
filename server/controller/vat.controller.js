@@ -9,8 +9,8 @@ module.exports = {
         },
         select: {
           vat: true,
+          id: true,
         },
-        take: 1,
       });
       if (response.length != 1) {
         res.status(200).json([{ vat: 0 }]);

@@ -10,6 +10,7 @@ const detailsbudget = require("./routes/detailBudget.route");
 const objectTypeRoute = require("./routes/objectType.route");
 const activityType = require("./routes/activityType.route");
 const vatRoute = require("./routes/vat.route");
+const activityWisePip = require("./routes/activityWisePip.route");
 // const { exec } = require("child_process");
 const app = express();
 const corsOptions = {
@@ -60,6 +61,7 @@ app.use("/api", detailsbudget);
 app.use("/api", objectTypeRoute);
 app.use("/api", activityType);
 app.use("/api", vatRoute);
+app.use("/activityWisePip", vatRoute);
 
 // server start
 app.listen(process.env.PORT, () => {

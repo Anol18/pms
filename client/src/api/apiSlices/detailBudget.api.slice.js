@@ -9,6 +9,10 @@ export const detailBudgetApi = createApi({
       query: () => `api/detailsbudget`,
       providesTags: [`detailBudget`],
     }),
+    getTotalDetailBudgetList: builder.query({
+      query: () => `api/totaldetailsbudget`,
+      providesTags: [`detailBudget`],
+    }),
     addDetailBudget: builder.mutation({
       query: (data) => ({
         url: `api/detailsbudget`,
@@ -19,5 +23,8 @@ export const detailBudgetApi = createApi({
     }),
   }),
 });
-export const { useDetailBudgetListQuery, useAddDetailBudgetMutation } =
-  detailBudgetApi;
+export const {
+  useDetailBudgetListQuery,
+  useAddDetailBudgetMutation,
+  useGetTotalDetailBudgetListQuery,
+} = detailBudgetApi;

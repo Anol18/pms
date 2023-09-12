@@ -30,10 +30,8 @@ const Designation = lazy(() =>
   import("./Pages/Settings/Designation/List/Page")
 );
 const ObjectType = lazy(() => import("./Pages/Settings/Object-type/List/Page"));
-const DurationType = lazy(() =>
-  import("./Pages/Settings/Duration-type/List/Page")
-);
-const VatList = lazy(() => import("./Pages/Settings/Vat/List/Page"));
+
+const ActivityWisePip = lazy(() => import("./Pages/PIP/ActivityWisePip/Page"));
 function App() {
   return (
     <>
@@ -175,19 +173,12 @@ function App() {
                       </Suspense>
                     }
                   />
+
                   <Route
-                    path="/durationType"
+                    path="/activitywisepip"
                     element={
                       <Suspense fallback={<Spinner />}>
-                        <DurationType />
-                      </Suspense>
-                    }
-                  />
-                  <Route
-                    path="/vat"
-                    element={
-                      <Suspense fallback={<Spinner />}>
-                        <VatList />
+                        <ActivityWisePip />
                       </Suspense>
                     }
                   />

@@ -49,7 +49,7 @@ const columns = [
 ];
 const Page = () => {
   const { data, isSuccess } = useVatListQuery();
-  console.log("vat", data);
+
   const [updateTableData, setUpdateTableData] = useState([]);
   const assignDataToTable = () => {
     const tableData = [];

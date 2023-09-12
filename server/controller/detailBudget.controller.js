@@ -46,7 +46,7 @@ module.exports = {
             gross: i.gross,
             tax: i.tax,
             net: i.net,
-            vat: req.body.vatRes,
+            vat: i.vat,
             activityId: req.body.e.activity,
           };
         })
@@ -71,6 +71,20 @@ module.exports = {
       res.status(500).send("Internal Server error");
     }
   },
+  getDetailBudget: async (req, res) => {
+    try {
+      const response = await prisma.DetailBudget.findMany({
+        orderBy: {
+          id: "desc",
+        },
+      });
+      res.status(200).send(response);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Internal Server error");
+    }
+  },
+
   delete: async (req, res) => {},
   put: async (req, res) => {},
 };
