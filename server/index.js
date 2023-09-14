@@ -12,6 +12,7 @@ const activityType = require("./routes/activityType.route");
 const vatRoute = require("./routes/vat.route");
 const activityWisePip = require("./routes/activityWisePip.route");
 // const { exec } = require("child_process");
+const activityTotalRoute = require("./routes/activityTotal.route");
 const app = express();
 const corsOptions = {
   origin: process.env.URL,
@@ -61,7 +62,8 @@ app.use("/api", detailsbudget);
 app.use("/api", objectTypeRoute);
 app.use("/api", activityType);
 app.use("/api", vatRoute);
-app.use("/activityWisePip", vatRoute);
+app.use("/api", activityWisePip);
+app.use("/api", activityTotalRoute);
 
 // server start
 app.listen(process.env.PORT, () => {

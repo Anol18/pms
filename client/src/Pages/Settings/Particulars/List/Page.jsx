@@ -12,8 +12,10 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import { Spin } from "antd";
 import { useParticularListQuery } from "../../../../api/apiSlices/particular.api";
 import AddParticular from "../Add/Page";
+
 const Page = () => {
   const { data: particular, isSuccess } = useParticularListQuery();
+
   const [tableData, setTableData] = useState();
 
   function setDataToTable() {
@@ -44,7 +46,7 @@ const Page = () => {
           <Header className="header">
             <h4>Budget Description</h4>
           </Header>
-          <Content>
+          <Content style={{ padding: "0 10vw 60px 10vw" }}>
             <Row justify="end" style={{ margin: 10 }}>
               <Col>
                 <AddParticular />
@@ -60,6 +62,7 @@ const Page = () => {
                     y: 400,
                     x: 1000,
                   }}
+                  pagination={false}
                 >
                   <Column
                     title="#SL"
@@ -73,9 +76,8 @@ const Page = () => {
                     dataIndex="particular"
                     key="particular"
                   />
-                  <Column title="VAT %" dataIndex="vat" key="vat" />
-
                   <Column title="AC" dataIndex="isAc" key="ac" />
+                  <Column title="VAT %" dataIndex="vat" key="vat" />
                   <Column title="TAX %" dataIndex="totalTax" key="totalTax" />
                   <Column
                     title="Action"

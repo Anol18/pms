@@ -47,7 +47,6 @@ const Page = () => {
 
       dataIndex: "outComeName",
       width: 10,
-      align: "center",
     },
     {
       title: "Total Activities",

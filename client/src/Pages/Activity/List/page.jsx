@@ -21,7 +21,7 @@ import { useActivityListQuery } from "../../../api/apiSlices/activity.api.slice"
 
 const { Header, Content } = Layout;
 const Page = () => {
-  const { data, isLoading, isSuccess, error } = useActivityListQuery();
+  const { data, isLoading, isSuccess, error, refetch } = useActivityListQuery();
 
   const [result, setResult] = useState();
   const [tableData, setTableData] = useState();
@@ -33,6 +33,7 @@ const Page = () => {
       dataIndex: "sl",
       width: 40,
       align: "center",
+      editable: true,
     },
     {
       title: "Activities",
@@ -121,6 +122,7 @@ const Page = () => {
   const laodTableData = () => {};
   useEffect(() => {
     laodTableData();
+    refetch();
   }, [isSuccess]);
 
   return (

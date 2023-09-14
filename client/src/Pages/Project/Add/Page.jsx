@@ -186,8 +186,8 @@ const Page = () => {
         size={[0, 48]}
       >
         <Layout>
-          <Header style={{ backgroundColor: "#fff" }}>
-            <h4 style={{ textAlign: "center" }}>Add Project</h4>
+          <Header className="header">
+            <h4>Add Project</h4>
           </Header>
           <Row>
             <Col lg={{ span: 20 }}></Col>

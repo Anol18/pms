@@ -10,14 +10,13 @@ import {
   Space,
 } from "antd";
 import { useEffect, useState } from "react";
-
 import {
   useActivityListQuery,
   useAddActivityMutation,
 } from "../../../api/apiSlices/activity.api.slice";
 import { useNavigate } from "react-router-dom";
-const { Content, Header } = Layout;
 
+const { Content, Header } = Layout;
 const Page = () => {
   const [form] = Form.useForm();
   const [loadOutcome, setLoadOutcome] = useState();
@@ -29,14 +28,12 @@ const Page = () => {
   function generateYearSeries(startDate, endDate) {
     const startYear = startDate;
     const endYear = endDate;
-
     const yearSeries = [];
     for (let year = startYear; year <= endYear; year++) {
       yearSeries.push({
         year: year,
       });
     }
-
     return yearSeries;
   }
 
@@ -53,7 +50,6 @@ const Page = () => {
       }
     }
     setLoadOutcome(outComeList[0]?.outcome);
-
     const years = date?.map((dateString) => {
       const dateParts = dateString.split("/");
       const year = dateParts[2];
@@ -89,9 +85,11 @@ const Page = () => {
       navigate("/activitylist");
     }
   };
+
   useEffect(() => {
     refetch();
   }, []);
+
   return (
     <>
       <Space
@@ -102,10 +100,8 @@ const Page = () => {
         size={[0, 48]}
       >
         <Layout>
-          <Header style={{ backgroundColor: "#fff" }}>
-            <h4 style={{ textAlign: "center", backgroundColor: "white" }}>
-              Add Activity
-            </h4>
+          <Header className="header">
+            <h4>Add Activity</h4>
           </Header>
           <Content>
             <Form

@@ -68,7 +68,6 @@ const items = [
     getItem("Object Type", "/objectType"),
     getItem("Activity Type", "/activityType"),
     // getItem("Duration Type", "/durationType"),
-    getItem("VAT", "/vat"),
 
     // getItem("Notifications Settings", "/notifications"),
   ]),

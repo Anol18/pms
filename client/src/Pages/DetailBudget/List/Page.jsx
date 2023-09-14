@@ -6,14 +6,19 @@ import {
   useDetailBudgetListQuery,
   useGetTotalDetailBudgetListQuery,
 } from "../../../api/apiSlices/detailBudget.api.slice";
+import { useActivityTotalListQuery } from "../../../api/apiSlices/activityTotal.slice";
 const Page = () => {
   const { data: budgetList, isSuccess } = useGetTotalDetailBudgetListQuery();
   const { data } = useDetailBudgetListQuery();
+  const { data: activityTotal, isSuccess: activityTotalSuccess } =
+    useActivityTotalListQuery();
   const [result, setResult] = useState();
+  const [total, setTotal] = useState(0);
   const [outcomeResult, setOutcomeResult] = useState();
   const [activityId, setActivityId] = useState();
   const [loadDataToTable, setLoadDataToTable] = useState([]);
   let showData = [];
+
   const OnChangeProject = (e) => {
     if (e) {
       for (const item of data) {
@@ -27,7 +32,6 @@ const Page = () => {
             });
           });
           setResult(showData);
-          break;
         }
       }
     } else {
@@ -38,18 +42,21 @@ const Page = () => {
 
   let showOutComeName = [];
   // form onChange handler
+
   const onChangeOutcome = (e) => {
     if (e) {
       for (const item of result) {
         item.activity?.map((v, i) => {
-          showOutComeName.push({
-            key: i,
-            id: v.id,
-            activityName: v.activityName,
-          });
+          if (e === v.outcomeId) {
+            showOutComeName.push({
+              key: i,
+              id: v.id,
+              index: v.index,
+              activityName: v.activityName,
+            });
+          }
         });
         setOutcomeResult(showOutComeName);
-        break;
       }
     } else {
       setOutcomeResult();
@@ -95,11 +102,11 @@ const Page = () => {
       dataIndex: "durationType",
     },
     {
-      title: "Gross Total",
+      title: "Gross Total (BDT)",
       dataIndex: "gross",
     },
     {
-      title: "Net Total",
+      title: "Net Total (BDT)",
       dataIndex: "net",
     },
     {
@@ -112,13 +119,14 @@ const Page = () => {
     },
   ];
   const tableData = [];
-
+  console.log(outcomeResult);
   const handleActivity = (id) => {
+    let count = 0;
     budgetList.map((i, index) => {
       if (i.activityId === id) {
         tableData.push({
           key: index,
-          sl: index + 1,
+          sl: ++count,
           particular: i.particular,
           costPerUnit: i.costPerUnit,
           objectUnit: i.objectUnit,
@@ -127,16 +135,29 @@ const Page = () => {
           activityType: i.activityType,
           durationUnit: i.durationUnit,
           durationType: i.durationType,
-          gross: i.gross + " " + "BDT",
-          net: i.net + " " + "BDT",
+          gross: i.gross,
+          net: i.net,
           tax: i.tax,
           vat: i.vat,
         });
       }
     });
-    setLoadDataToTable(tableData);
-  };
+    let activityTotalData = [];
+    activityTotalSuccess &&
+      activityTotal.map((item) => {
+        if (id === item.activityId) {
+          activityTotalData.push({
+            grossTotal: item.grossTotal,
+            netTotal: item.netTotal,
+          });
+        }
+      });
 
+    setLoadDataToTable(tableData);
+    setTotal(activityTotalData);
+    activityTotalData = [];
+  };
+  console.log(total);
   return (
     <>
       <Space className="w-full" size={[0, 48]} direction="vertical">
@@ -272,12 +293,23 @@ const Page = () => {
                   placeholder="Select Activity"
                   className="w-full"
                   onChange={handleActivity}
+                  filterOption={(input, option) => {
+                    // Convert both the input and option label to lowercase for case-insensitive matching
+                    const inputValue = input.toLowerCase();
+                    const optionLabel = option.children.toLowerCase();
+
+                    // Check if either the index or activityName contains the input value
+                    return (
+                      optionLabel.includes(inputValue) ||
+                      optionLabel.startsWith(inputValue)
+                    );
+                  }}
                 >
                   {outcomeResult &&
                     outcomeResult.map((i) => {
                       return (
                         <Select.Option key={i.id} value={i.id}>
-                          {i.activityName}
+                          {`${i.index + ". " + i.activityName}`}
                         </Select.Option>
                       );
                     })}
@@ -291,6 +323,53 @@ const Page = () => {
                   columns={columns}
                   dataSource={loadDataToTable}
                 />
+              </Col>
+            </Row>
+
+            <Row className="total-budget-section" justify="end">
+              <Col>
+                <Row>
+                  <Col>
+                    <b>
+                      Gross Total:
+                      <input
+                        value={total && total[0]?.grossTotal}
+                        type="text"
+                        readOnly
+                        style={{
+                          outline: "none",
+                          border: "none",
+                          textAlign: "end",
+                          marginRight: "5px",
+                          marginLeft: "5px",
+                          color: "green",
+                        }}
+                      />
+                      BDT
+                    </b>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <b>
+                      Net Total:
+                      <input
+                        type="text"
+                        readOnly
+                        value={total && total[0]?.netTotal}
+                        style={{
+                          outline: "none",
+                          border: "none",
+                          textAlign: "end",
+                          marginRight: "5px",
+                          marginLeft: "17px",
+                          color: "green",
+                        }}
+                      />
+                      BDT
+                    </b>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Content>

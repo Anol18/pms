@@ -10,10 +10,14 @@ import {
   Form,
   Button,
 } from "antd";
-import { PlusCircleOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import {
+  PlusCircleOutlined,
+  InfoCircleOutlined,
+  MinusCircleOutlined,
+} from "@ant-design/icons";
 const { Content, Header } = Layout;
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useAddDetailBudgetMutation,
   useDetailBudgetListQuery,
@@ -50,9 +54,9 @@ const Page = () => {
       objectUnit: "",
       objectType: "",
       activityUnit: "",
-      activityType: "",
+      activityType: "Workshop",
       durationUnit: "",
-      durationType: "",
+      durationType: "Day / Days",
       gross: 0,
       tax: 0,
       vat: 0,
@@ -70,7 +74,7 @@ const Page = () => {
   };
   const handleParticularRow = () => {
     const newRow = {
-      key: addRow.length + 1,
+      key: addRow.length,
       index: addRow.length,
       sl: addRow.length + 1,
       particular: "",
@@ -78,9 +82,9 @@ const Page = () => {
       objectUnit: "",
       objectType: "",
       activityUnit: "",
-      activityType: "",
+      activityType: "Workshop",
       durationUnit: "",
-      durationType: "",
+      durationType: "Day / Days",
       gross: 0,
       tax: 0,
       vat: 0,
@@ -89,7 +93,7 @@ const Page = () => {
     setAddRow([...addRow, newRow]);
     const updatedNetTotal = addRow.reduce((total, row) => {
       const { gross, tax, vat } = row;
-      const net = gross + (gross * (vat / 100) + gross * (tax / 100));
+      const net = gross - (gross * (vat / 100) + gross * (tax / 100));
 
       return total + net;
     }, 0);
@@ -97,6 +101,12 @@ const Page = () => {
     setNetTotal(updatedNetTotal);
 
     handleOk();
+  };
+  const handleParticularRowDelete = () => {
+    let rowData = [...addRow];
+
+    rowData.splice(rowData.length - 1, 1);
+    setAddRow(rowData);
   };
   let showData = [];
 
@@ -123,16 +133,16 @@ const Page = () => {
       const { costPerUnit, objectUnit, activityUnit, durationUnit, tax, vat } =
         row;
       const gross = costPerUnit * objectUnit * activityUnit * durationUnit;
-      let net = gross + (gross * (vat / 100.0) + gross * (tax / 100));
+      let net = gross - (gross * (vat / 100.0) + gross * (tax / 100));
       return { ...row, gross, net };
     });
     setAddRow(updatedRowsWithTax);
-    const updatedNetTotal = addRow.reduce((total, row) => {
+    const updatedNetTotal = updatedRowsWithTax.reduce((total, row) => {
       const { gross, tax, vat } = row;
-      const net = gross + (gross * (vat / 100) + gross * (tax / 100));
+      const net = gross - (gross * (vat / 100) + gross * (tax / 100));
       return total + net;
     }, 0);
-    const updatedGrossTotal = addRow.reduce((total, row) => {
+    const updatedGrossTotal = updatedRowsWithTax.reduce((total, row) => {
       const { gross } = row;
       return total + gross;
     }, 0);
@@ -142,28 +152,48 @@ const Page = () => {
   // console.log("vat", vatData);
   const columnName = [
     {
-      render: () => (
+      key: "key",
+      width: "2%",
+      render: (_, record) => (
         <>
-          <Button
-            style={{
-              width: "100%",
-              border: "none",
-              // backgroundColor: "var(--green-button)",
-              // color: "var(--light)",
-            }}
-            icon={<PlusCircleOutlined style={{ color: "black" }} />}
-            onClick={showModal}
-          ></Button>
+          {record.sl === addRow.length ? (
+            <Button
+              style={{
+                width: "100%",
+                border: "none",
+                // backgroundColor: "var(--green-button)",
+                // color: "var(--light)",
+              }}
+              icon={<PlusCircleOutlined style={{ color: "black" }} />}
+              onClick={handleParticularRow}
+            />
+          ) : (
+            <Button
+              style={{
+                width: "100%",
+                border: "none",
+                // backgroundColor: "var(--green-button)",
+                // color: "var(--light)",
+              }}
+              icon={<MinusCircleOutlined style={{ color: "black" }} />}
+              onClick={handleParticularRowDelete}
+            />
+          )}
         </>
       ),
     },
     {
       title: "#SL",
       align: "center",
+      key: "key",
       dataIndex: "sl",
+
+      width: "2%",
     },
     {
       title: "Particular",
+      key: "key",
+
       render: () => (
         <Select
           style={{ width: "100%" }}
@@ -185,10 +215,12 @@ const Page = () => {
         </Select>
       ),
       width: "15%",
+
       align: "center",
     },
     {
       title: "Cost Per Unit(BDT)",
+      key: "key",
       render: () => (
         <InputNumber
           onChange={(value) =>
@@ -203,6 +235,7 @@ const Page = () => {
     },
     {
       title: "Object Unit",
+      key: "key",
       render: () => (
         <InputNumber
           style={{ width: "100%" }}
@@ -218,6 +251,7 @@ const Page = () => {
     },
     {
       title: "Object Type",
+      key: "key",
       render: () => (
         <Select
           style={{ width: "100%" }}
@@ -242,6 +276,7 @@ const Page = () => {
     },
     {
       title: "Activity Unit",
+      key: "key",
       render: () => (
         <InputNumber
           style={{ width: "100%" }}
@@ -257,11 +292,14 @@ const Page = () => {
     },
     {
       title: "Activity Type",
-      render: () => (
+      key: "key",
+      render: (_, record) => (
         <Select
           style={{ width: "100%" }}
           allowClear
           showSearch
+          // value={record.activityType}
+          defaultValue="Workshop"
           onChange={(value) =>
             handleActivityTable(addRow.length - 1, "activityType", value)
           }
@@ -281,6 +319,7 @@ const Page = () => {
     },
     {
       title: "Duration Unit",
+      key: "key",
       render: () => (
         <InputNumber
           style={{ width: "100%" }}
@@ -296,11 +335,13 @@ const Page = () => {
     },
     {
       title: "Duration Type",
+      key: "key",
       render: () => (
         <Select
           style={{ width: "100%" }}
           allowClear
           showSearch
+          defaultValue="Day/Days"
           onChange={(value) =>
             handleActivityTable(addRow.length - 1, "durationType", value)
           }
@@ -327,43 +368,30 @@ const Page = () => {
       align: "center",
     },
 
-    // {
-    //   title: "VAT",
-    //   render: () => (
-    //     <Select
-    //       style={{ width: "100%" }}
-    //       allowClear
-    //       showSearch
-    //       onChange={(value) =>
-    //         handleActivityTable(addRow.length - 1, "vat", parseFloat(value))
-    //       }
-    //       name="vat"
-    //     >
-    //       {vatData?.map((item) => {
-    //         return (
-    //           <Select.Option key={item.id} value={item.vat}>
-    //             {item.vat}
-    //           </Select.Option>
-    //         );
-    //       })}
-    //     </Select>
-    //   ),
-    //   width: "8%",
-    //   align: "center",
-    // },
-
     {
       title: "Gross Total",
+      key: "key",
       render: (_, record) => (
-        <InputNumber style={{ width: "100%" }} disabled value={record.gross} />
+        <>
+          <InputNumber
+            style={{ width: "100%" }}
+            disabled
+            value={addRow[record.index]?.gross}
+          />
+        </>
       ),
       with: "10%",
       align: "center",
     },
     {
       title: "Net Total",
+      key: "key",
       render: (_, record) => (
-        <InputNumber style={{ width: "100%" }} disabled value={record.net} />
+        <InputNumber
+          style={{ width: "100%" }}
+          disabled
+          value={addRow[record.index]?.net}
+        />
       ),
       with: "10%",
       align: "center",
@@ -393,20 +421,20 @@ const Page = () => {
   };
 
   let showOutComeName = [];
-
-  // form onChange handler
   const onChangeOutcome = (e) => {
     if (e) {
       for (const item of result) {
         item.activity?.map((v, i) => {
-          showOutComeName.push({
-            key: i,
-            id: v.id,
-            activityName: v.activityName,
-          });
+          if (e === v.outcomeId) {
+            showOutComeName.push({
+              key: i,
+              id: v.id,
+              index: v.index,
+              activityName: v.activityName,
+            });
+          }
         });
         setOutcomeResult(showOutComeName);
-        break;
       }
     } else {
       setOutcomeResult();
@@ -420,12 +448,10 @@ const Page = () => {
       netTotal,
       calGRoss,
     });
-
     if (res) {
       navigate("/detailedbudgetlist");
     }
   };
-
   return (
     <>
       <Space direction="vertical" style={{ width: "100%" }} size={[0, 48]}>
@@ -516,12 +542,27 @@ const Page = () => {
                       },
                     ]}
                   >
-                    <Select allowClear showSearch placeholder="Select Activity">
+                    <Select
+                      allowClear
+                      showSearch
+                      placeholder="Select Activity"
+                      filterOption={(input, option) => {
+                        // Convert both the input and option label to lowercase for case-insensitive matching
+                        const inputValue = input.toLowerCase();
+                        const optionLabel = option.children.toLowerCase();
+
+                        // Check if either the index or activityName contains the input value
+                        return (
+                          optionLabel.includes(inputValue) ||
+                          optionLabel.startsWith(inputValue)
+                        );
+                      }}
+                    >
                       {outcomeResult &&
                         outcomeResult.map((i) => {
                           return (
                             <Select.Option key={i.id} value={i.id}>
-                              {i.activityName}
+                              {`${i.index + ". " + i.activityName}`}
                             </Select.Option>
                           );
                         })}
@@ -598,7 +639,7 @@ const Page = () => {
               </Row>
             </Form>
           </Content>
-          <Modal
+          {/* <Modal
             title="Add New Row"
             open={isModalOpen}
             onOk={handleOk}
@@ -624,7 +665,7 @@ const Page = () => {
                 </Button>
               </Col>
             </Row>
-          </Modal>
+          </Modal> */}
         </Layout>
       </Space>
     </>

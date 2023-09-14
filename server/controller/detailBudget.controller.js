@@ -18,6 +18,8 @@ module.exports = {
                 select: {
                   id: true,
                   activityName: true,
+                  index: true,
+                  outcomeId: true,
                 },
               },
             },

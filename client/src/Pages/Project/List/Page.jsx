@@ -261,8 +261,8 @@ const Page = () => {
         size={[0, 48]}
       >
         <Layout>
-          <Header style={{ backgroundColor: "white" }}>
-            <h4 style={{ textAlign: "center" }}>Projects List</h4>
+          <Header className="header">
+            <h4>Projects List</h4>
           </Header>
           <Content className="container">
             <Row gutter={16} justify="space-around">
