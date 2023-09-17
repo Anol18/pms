@@ -12,6 +12,7 @@ import { objectTypeApi } from "./api/apiSlices/objectType.slice";
 import { activityTypeApi } from "./api/apiSlices/activityType.slice";
 import { vatApi } from "./api/apiSlices/vat.slice";
 import { ActivityTotalApi } from "./api/apiSlices/activityTotal.slice";
+import { activityWisePipApi } from "./api/apiSlices/activityWisePip.slice";
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     [activityTypeApi.reducerPath]: activityTypeApi.reducer,
     [vatApi.reducerPath]: vatApi.reducer,
     [ActivityTotalApi.reducerPath]: ActivityTotalApi.reducer,
+    [activityWisePipApi.reducerPath]: activityWisePipApi.reducer,
     // redux Slice
     projectSlice: projectSlice,
   },
@@ -37,6 +39,7 @@ const store = configureStore({
       .concat(activityTypeApi.middleware)
       .concat(vatApi.middleware)
       .concat(ActivityTotalApi.middleware)
+      .concat(activityWisePipApi.middleware)
       .concat(detailBudgetApi.middleware),
 });
 // setupListeners(store.dispatch);

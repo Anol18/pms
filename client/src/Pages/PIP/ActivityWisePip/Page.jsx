@@ -1,6 +1,21 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Button, Form, Input, Popconfirm, Table } from "antd";
+import { Button, Col, Form, Input, Popconfirm, Row, Select, Table } from "antd";
+import { useActivityWisePipListQuery } from "../../../api/apiSlices/activityWisePip.slice";
 const EditableContext = React.createContext(null);
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
   return (
@@ -11,6 +26,7 @@ const EditableRow = ({ index, ...props }) => {
     </Form>
   );
 };
+
 const EditableCell = ({
   title,
   editable,
@@ -22,6 +38,7 @@ const EditableCell = ({
 }) => {
   const [editing, setEditing] = useState(false);
   const inputRef = useRef(null);
+
   const form = useContext(EditableContext);
   useEffect(() => {
     if (editing) {
@@ -54,12 +71,12 @@ const EditableCell = ({
           margin: 0,
         }}
         name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
+        // rules={[
+        //   {
+        //     required: true,
+        //     message: `${title} is required.`,
+        //   },
+        // ]}
       >
         <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
@@ -77,7 +94,8 @@ const EditableCell = ({
   }
   return <td {...restProps}>{childNode}</td>;
 };
-const App = () => {
+const Page = () => {
+  const [duration, setDuration] = useState();
   const [dataSource, setDataSource] = useState([
     {
       key: "0",
@@ -92,26 +110,43 @@ const App = () => {
       address: "London, Park Lane no. 1",
     },
   ]);
+  const { data, isSuccess } = useActivityWisePipListQuery();
+  // console.log(data);
+
+  // console.log(dataSource);
+  // useEffect(() => {}, [dataSource]);
   const [count, setCount] = useState(2);
   const handleDelete = (key) => {
     const newData = dataSource.filter((item) => item.key !== key);
     setDataSource(newData);
   };
+
   const defaultColumns = [
     {
-      title: "name",
-      dataIndex: "name",
-      width: "30%",
-      editable: true,
+      title: "SL",
+      dataIndex: "sl",
+      width: "10%",
     },
     {
-      title: "age",
-      dataIndex: "age",
+      title: "Activities",
+      dataIndex: "activities",
+      width: "20%",
     },
-    {
-      title: "address",
-      dataIndex: "address",
-    },
+    // {
+    //   title: "Unit Budget",
+    //   dataIndex: "unitbudget",
+    //   editable: true,
+    //   children: [
+    //     {
+    //       title: "abu",
+    //       editable: true,
+    //     },
+    //     {
+    //       title: "alu",
+    //       editable: true,
+    //     },
+    //   ],
+    // },
     {
       title: "operation",
       dataIndex: "operation",
@@ -126,6 +161,8 @@ const App = () => {
         ) : null,
     },
   ];
+  // console.log(year);
+
   const handleAdd = () => {
     const newData = {
       key: count,
@@ -146,27 +183,93 @@ const App = () => {
     });
     setDataSource(newData);
   };
+
   const components = {
     body: {
       row: EditableRow,
       cell: EditableCell,
     },
   };
-  const columns = defaultColumns.map((col) => {
-    if (!col.editable) {
-      return col;
+  // const columns = defaultColumns.map((col) => {
+  //   if (!col.editable) {
+  //     return col;
+  //   }
+  //   return {
+  //     ...col,
+  //     onCell: (record) => ({
+  //       record,
+  //       editable: col.editable,
+  //       dataIndex: col.dataIndex,
+  //       title: col.title,
+  //       handleSave,
+  //     }),
+  //   };
+  // });
+
+  const handleProject = (id) => {
+    const visualData = [];
+
+    data?.map((v) => {
+      if (v.id === id) {
+        // console.log(v);
+        setDuration(v.projectDuration);
+        visualData.push({
+          outcomeName: v.outComeName,
+        });
+      }
+    });
+  };
+
+  // const valid = duration[0][0]?.split("/");
+  // duration?.map((v) => {
+  // console.log(v.split("/")[1]);
+  // console.log(v.split("/")[2]);
+  // });
+  // useEffect(() => {}, [defaultColumns]);
+  const [cc, setCc] = useState([]);
+  // const year = duration?.map((v) => v.split("/")[2]);
+  // console.log("year", year);
+  const month = duration?.map((v) => v.split("/")[1]);
+  const year = duration?.map((v) => v.split("/")[2]);
+  console.log(month && months[parseInt(month[0])]);
+  const child = [];
+  const addDynamicTable = () => {
+    let j = 1;
+
+    if (year && month) {
+      for (let k = parseInt(month[0]); k < 12; k++) {
+        child.push({ title: months[k], editable: true });
+      }
+
+      console.log(child);
+      for (let i = year[0]; i <= year[1]; i++, j++) {
+        defaultColumns.splice(1 + j, 0, {
+          title: i,
+          children: [...child],
+        });
+      }
+      setCc(
+        defaultColumns.map((col) => {
+          if (!col.editable) {
+            return col;
+          }
+          return {
+            ...col,
+            onCell: (record) => ({
+              record,
+              editable: col.editable,
+              dataIndex: col.dataIndex,
+              title: col.title,
+              handleSave,
+            }),
+          };
+        })
+      );
     }
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        handleSave,
-      }),
-    };
-  });
+  };
+  useEffect(() => {
+    addDynamicTable();
+  }, [duration]);
   return (
     <div>
       <Button
@@ -178,14 +281,29 @@ const App = () => {
       >
         Add a row
       </Button>
+      <Row>
+        <Col lg={{ span: 24 }}>
+          <Select className="w-full" onChange={handleProject}>
+            {data?.map((v) => {
+              return (
+                <Select.Option key={v.id} value={v.id}>
+                  {v.projectName}
+                </Select.Option>
+              );
+            })}
+          </Select>
+        </Col>
+      </Row>
       <Table
         components={components}
         rowClassName={() => "editable-row"}
         bordered
+        size="small"
         dataSource={dataSource}
-        columns={columns}
+        pagination={false}
+        columns={cc}
       />
     </div>
   );
 };
-export default App;
+export default Page;

@@ -1,7 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 module.exports = {
-  get: async () => {
+  get: async (req, res) => {
     try {
       const response = await prisma.Projects.findMany({
         orderBy: {
@@ -10,6 +10,7 @@ module.exports = {
         select: {
           id: true,
           projectName: true,
+          projectDuration: true,
           Outcome: {
             select: {
               id: true,
@@ -25,18 +26,31 @@ module.exports = {
           },
         },
       });
-    } catch (error) {}
+      res.status(200).send(response);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Internatl Server error");
+    }
   },
   post: async () => {
     try {
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Internatl Server error");
+    }
   },
   put: async () => {
     try {
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Internatl Server error");
+    }
   },
   delete: async () => {
     try {
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Internatl Server error");
+    }
   },
 };
